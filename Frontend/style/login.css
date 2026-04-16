@@ -1,28 +1,66 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    padding: 20px;
     background-color: #E8E2D9;
+}
+
+main {
+    padding: 20px;
+    height: 100vh;
+}
+
+h1 {
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 800;
+    font-size: 36px;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.start p {
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 200;
+    font-size: 18px;
 }
 
 .row {
     display: flex;
     flex-direction: row;
     width: 100%;
+    height: 100%;
 }
 
-.col {
+.col-1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    background-color: white;
+    border-radius: 40px 0px 0px 40px;
+    padding: 40px;
+}
+
+.col-2 {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
     background-color: white;
+    border-radius: 0px 40px 40px 0px;
+    padding: 20px;
 }
 
 .start {
     display: flex;
     flex-direction: column;
     align-items: start;
+    justify-content: start;
 }
 
 .split {
@@ -34,4 +72,126 @@ body {
 .row-start {
     display: flex;
     gap: 20px;
+    font-family: 'Epilogue', sans-serif;
+    margin-bottom: 20px;
+    color: gray;
+    font-weight: 400;
+}
+
+.row-start .active {
+    color: #610000;
+    font-weight: 700;
+    border-bottom: 2px solid #610000;
+    margin-bottom: -21px;
+    z-index: 1;
+    position: relative;
+}
+
+#line {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(128, 128, 128, 0.5);
+    margin-bottom: 30px;
+}
+
+.split-password {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+#welcome {
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.context {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 300;
+    margin-bottom: 40px;
+    font-size: 16px;
+}
+
+
+#email {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #5d4037;
+    margin-bottom: 8px;
+}
+
+input[type="email"] {
+    background-color: #e9e5df;
+    border: none;
+    border-radius: 40px;
+    padding: 16px 25px;
+    font-size: 16px;
+    color: #a39c94;
+    outline: none;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+input[type="email"]::placeholder {
+    color: #a39c94;
+}
+
+input[type="email"]:focus {
+    background-color: #e2ddd5;
+}
+
+.split-password {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 400px;
+    margin-bottom: 8px;
+}
+
+.split-password p {
+    font-family: sans-serif;
+    font-size: 14px;
+    margin: 0;
+}
+
+.split-password p:first-child {
+    color: #5d4037;
+    font-weight: 500;
+}
+
+.split-password p:last-child {
+    color: #a39c94;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: underline;
+}
+
+input[type="password"] {
+    background-color: #e9e5df;
+    border: none;
+    border-radius: 40px;
+    padding: 16px 25px;
+    font-size: 16px;
+    color: #a39c94;
+    outline: none;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+input[type="password"]::placeholder {
+    color: #a39c94;
+}
+
+input[type="password"]:focus {
+    background-color: #e2ddd5;
 }
