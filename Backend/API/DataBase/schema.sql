@@ -1,91 +1,98 @@
 -- ============================================================
--- SCHEMA SQL - Plateforme de forum
+-- SCHEMA SQL - Plateforme de forum (Version MySQL propre)
 -- ============================================================
 
--- Table des utilisateurs (F-1, F-2)
+-- ========================
+-- TABLE USERS
+-- ========================
 CREATE TABLE users (
-    id            SERIAL PRIMARY KEY,
+    id            INT AUTO_INCREMENT PRIMARY KEY,
     username      VARCHAR(30)  NOT NULL UNIQUE,
     email         VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(100) NOT NULL,
-    role          VARCHAR(20)  NOT NULL DEFAULT 'user'
-                  CHECK (role IN ('user', 'admin')),
-    is_banned     BOOLEAN      NOT NULL DEFAULT FALSE,
-    created_at    TIMESTAMP    NOT NULL DEFAULT NOW()
-);
+    password_hash VARCHAR(255) NOT NULL,
+    role          ENUM('user', 'admin', 'modo') NOT NULL DEFAULT 'user',
+    is_banned     TINYINT(1) NOT NULL DEFAULT 0,
+    created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 
--- Table des tags / catégories (F-4, F-10)
+-- ========================
+-- TABLE TAGS
+-- ========================
 CREATE TABLE tags (
-    id   SERIAL PRIMARY KEY,
+    id   INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(30) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB;
 
--- Table des topics (F-4)
+-- ========================
+-- TABLE TOPICS
+-- ========================
 CREATE TABLE topics (
-    id         SERIAL PRIMARY KEY,
+    id         INT AUTO_INCREMENT PRIMARY KEY,
     title      VARCHAR(100) NOT NULL,
-    body       VARCHAR(100) NOT NULL,
-    status     VARCHAR(10)  NOT NULL DEFAULT 'open'
-               CHECK (status IN ('open', 'closed', 'archived')),
-    author_id  INTEGER      NOT NULL,
-    created_at TIMESTAMP    NOT NULL DEFAULT NOW(),
-    -- Définition des clés étrangères
-    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
-);
+    body       TEXT NOT NULL,
+    status     ENUM('open', 'closed', 'archived') NOT NULL DEFAULT 'open',
+    author_id  INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- Table de liaison topics <-> tags (F-4, F-10)
+    FOREIGN KEY (author_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ========================
+-- TABLE TOPIC_TAGS
+-- ========================
 CREATE TABLE topic_tags (
-    topic_id INTEGER NOT NULL,
-    tag_id   INTEGER NOT NULL,
+    topic_id INT NOT NULL,
+    tag_id   INT NOT NULL,
+
     PRIMARY KEY (topic_id, tag_id),
-    -- Définition des clés étrangères
-    FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
 
--- Table des messages (F-5)
+    FOREIGN KEY (topic_id)
+        REFERENCES topics(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (tag_id)
+        REFERENCES tags(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ========================
+-- TABLE MESSAGES
+-- ========================
 CREATE TABLE messages (
-    id         SERIAL PRIMARY KEY,
-    body       VARCHAR(500) NOT NULL,
-    topic_id   INTEGER      NOT NULL,
-    author_id  INTEGER      NOT NULL,
-    created_at TIMESTAMP    NOT NULL DEFAULT NOW(),
-    -- Définition des clés étrangères
-    FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE,
-    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
-);
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    body       TEXT NOT NULL,
+    topic_id   INT NOT NULL,
+    author_id  INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- Table des likes / dislikes sur les messages (F-7)
+    FOREIGN KEY (topic_id)
+        REFERENCES topics(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (author_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ========================
+-- TABLE MESSAGE_VOTES
+-- ========================
 CREATE TABLE message_votes (
-    user_id    INTEGER  NOT NULL,
-    message_id INTEGER  NOT NULL,
-    vote       SMALLINT NOT NULL CHECK (vote IN (1, -1)),
+    user_id    INT NOT NULL,
+    message_id INT NOT NULL,
+    vote       TINYINT NOT NULL, -- +1 ou -1
+
     PRIMARY KEY (user_id, message_id),
-    -- Définition des clés étrangères
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE
-);
 
--- ============================================================
--- INDEX pour les performances
--- ============================================================
+    FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
 
-CREATE INDEX idx_topics_title ON topics (title);
-CREATE INDEX idx_messages_topic_date ON messages (topic_id, created_at DESC);
-CREATE INDEX idx_votes_message ON message_votes (message_id);
-CREATE INDEX idx_topic_tags_tag ON topic_tags (tag_id);
+    FOREIGN KEY (message_id)
+        REFERENCES messages(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
 
--- ============================================================
--- VUE utilitaire : score de popularité des messages
--- ============================================================
-CREATE VIEW message_scores AS
-SELECT
-    m.id AS message_id,
-    m.topic_id,
-    m.author_id,
-    m.body,
-    m.created_at,
-    COALESCE(SUM(v.vote), 0) AS score
-FROM messages m
-LEFT JOIN message_votes v ON v.message_id = m.id
-GROUP BY m.id, m.topic_id, m.author_id, m.body, m.created_at;
+-- ENGINE=InnoDB sert a indiquer quel moteur se fais utiliser par Mysql
