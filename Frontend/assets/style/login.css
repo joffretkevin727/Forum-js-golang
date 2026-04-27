@@ -117,7 +117,7 @@ h1 {
     border-bottom: 2px solid #000;
 }
 
-#line {
+.line {
     width: 100%;
     height: 1px;
     background-color: rgba(128, 128, 128, 0.5);
@@ -133,7 +133,7 @@ h1 {
     font-size: 14px;
 }
 
-#welcome {
+.welcome {
     font-family: 'Epilogue', sans-serif;
     font-weight: 800;
     font-size: 30px;
@@ -148,7 +148,7 @@ h1 {
 }
 
 
-#email {
+.email {
     font-family: "Plus Jakarta Sans", sans-serif;
     font-weight: 500;
     font-size: 14px;
@@ -225,7 +225,7 @@ input[type="password"]:focus {
     background-color: #e2ddd5;
 }
 
-#sign-in-btn {
+.sign-in-btn {
     padding: 16px 25px;
     display: flex;
     justify-content: center;
@@ -244,7 +244,15 @@ input[type="password"]:focus {
     transition: background-color 0.2s;
 }
 
-#sign-in-btn:hover {
+.box {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    max-width: 400px;
+}
+
+.sign-in-btn:hover {
     background-color: #4a0000;
 }
 
