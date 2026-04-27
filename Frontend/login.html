@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="style/login.css">
+    <link rel="stylesheet" href="assets/style/login.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
@@ -16,17 +16,22 @@
     <div class="row">
         <div class="col-1 split">
             <div class="start">
-                <h1>La Kevin Dorée</h1>
-                <p>Where tradition rises with every  golden crust</p>
+                <div class="logo-container">
+                    <img src="assets/logo.png" alt="" class="logo">
+                    <div id="top-title">
+                        <h1>La Kevin Dorée</h1>
+                        <p>Where tradition rises with every  golden crust</p>
+                    </div>
+                </div>
             </div>
+
             <div id="card">
 
             </div>
 
         </div>
-
             <div class="col-2">
-                <div class="box">
+                <div class="box active">
                     <div class="row-start">
                         <p class="active">Sign In</p>
                         <p>Sign Up</p>
@@ -36,7 +41,7 @@
                     <p class="context">Please enter your  details to access your artisanal account.</p>
 
                     <p id="email">Email or Username</p>
-                    <input type="email"    placeholder="Email">
+                    <input type="email"  placeholder="Email">
 
                     <div class="split-password">
                         <p>Password</p>
@@ -45,13 +50,35 @@
 
                     <input type="password" placeholder="Mot de passe">
 
-                    <p>Remember me for 30 days</p>
+                    <div class="remember-container">
+                        <input type="checkbox" id="remember-checkbox">
+                        <label for="remember-checkbox" id="remember-me">Remember me for 30 days</label>
+                    </div>
+
+                    <div id="sign-in-btn">
+                        Sign In
+                    </div>
                 </div>
+
+                <div class="sign-up">
+                    <div class="row-start">
+                        <p class="active">Sign In</p>
+                        <p>Sign Up</p>
+                    </div>
+                    <input type="email" placeholder="Prenom">
+                    <input type="email" placeholder="Email">
+                    <input type="email" placeholder="Username">
+                    <input type="password" placeholder="Password">
+                    content
+                </div>
+
             </div>
 
     </div>
 
 </main>
+
+<script src="assets/js/login.js"></script>
 
 </body>
 </html>
