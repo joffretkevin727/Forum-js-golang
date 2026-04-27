@@ -1,0 +1,95 @@
+:root {
+    --sidebar-bg: #610000;
+    --sidebar-width: 260px;
+    --title-color: #FFD700;       /* Jaune Doré */
+    --link-color: #ffffff;
+    --link-hover-bg: #4d0909;
+    --link-hover-color: #FFD700;
+    --accent-color: #FFD700;
+    --filter-white: invert(100%) sepia(0%) saturate(7500%) hue-rotate(0deg) brightness(100%) contrast(100%);
+    --filter-gold: invert(85%) sepia(51%) saturate(2843%) hue-rotate(3deg) brightness(105%) contrast(105%);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f8fa;
+    display: flex;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    position: fixed;
+    padding-top: 20px;
+    color: white;
+    overflow-y: auto;
+}
+
+.logo {
+    padding: 0 25px 20px 25px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+}
+
+.menu-group { margin-bottom: 25px; }
+
+.menu-title {
+    padding: 0 25px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--title-color);
+    margin-bottom: 10px;
+}
+
+.sidebar ul { list-style: none; }
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-left: 4px solid transparent;
+    transition: 0.2s;
+}
+
+.menu-icon {
+    width: 18px !important;
+    height: 18px !important;
+    margin-right: 15px;
+    filter: var(--filter-white);
+}
+
+/* --- ÉTAT ACTIF / SURVOL (UNIQUEMENT POUR LE MENU) --- */
+/* On cible spécifiquement les liens dans les listes */
+.sidebar ul li a:hover, 
+.sidebar ul li a.active {
+    background-color: var(--link-hover-bg);
+    color: var(--link-hover-color);
+    border-left: 4px solid var(--accent-color);
+}
+
+.sidebar ul li a:hover .menu-icon,
+.sidebar ul li a.active .menu-icon {
+    filter: var(--filter-gold);
+}
+
+/* --- STYLE DU LOGO (SANS EFFET ACTIF) --- */
+.logo a {
+    text-decoration: none;
+    color: #ffffff;
+    transition: 0.3s;
+    border-left: none !important; /* On s'assure qu'il n'y a jamais de barre */
+}
+
+.logo a:hover {
+    color: var(--title-color); /* Juste un changement de couleur au survol, pas de fond */
+    background: none !important;
+}
