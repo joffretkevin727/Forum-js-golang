@@ -1,7 +1,7 @@
 :root {
     --sidebar-bg: #610000;
     --sidebar-width: 260px;
-    --title-color: #FFD700;       /* Jaune Doré */
+    --title-color: #FFD700;
     --link-color: #ffffff;
     --link-hover-bg: #4d0909;
     --link-hover-color: #FFD700;
@@ -10,33 +10,48 @@
     --filter-gold: invert(85%) sepia(51%) saturate(2843%) hue-rotate(3deg) brightness(105%) contrast(105%);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
 
 body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f5f8fa;
     display: flex;
+    min-height: 100vh;
 }
 
+/* --- SIDEBAR --- */
 .sidebar {
     width: var(--sidebar-width);
-    height: 100vh;
     background-color: var(--sidebar-bg);
-    position: fixed;
-    padding-top: 20px;
     color: white;
-    overflow-y: auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease; /* Transition fluide lors du redimensionnement */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logo {
-    padding: 0 25px 20px 25px;
+    padding: 25px;
     font-size: 1.5rem;
     font-weight: bold;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 25px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-.menu-group { margin-bottom: 25px; }
+.logo a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.menu-group {
+    margin-top: 20px;
+}
 
 .menu-title {
     padding: 0 25px;
@@ -45,9 +60,12 @@ body {
     text-transform: uppercase;
     color: var(--title-color);
     margin-bottom: 10px;
+    white-space: nowrap;
 }
 
-.sidebar ul { list-style: none; }
+.sidebar ul {
+    list-style: none;
+}
 
 .sidebar ul li a {
     display: flex;
@@ -58,6 +76,7 @@ body {
     font-size: 0.95rem;
     border-left: 4px solid transparent;
     transition: 0.2s;
+    white-space: nowrap; /* Empêche le texte de revenir à la ligne */
 }
 
 .menu-icon {
@@ -65,10 +84,10 @@ body {
     height: 18px !important;
     margin-right: 15px;
     filter: var(--filter-white);
+    flex-shrink: 0;
 }
 
-/* --- ÉTAT ACTIF / SURVOL (UNIQUEMENT POUR LE MENU) --- */
-/* On cible spécifiquement les liens dans les listes */
+/* --- SURVOL ET ÉTAT ACTIF --- */
 .sidebar ul li a:hover, 
 .sidebar ul li a.active {
     background-color: var(--link-hover-bg);
@@ -81,15 +100,45 @@ body {
     filter: var(--filter-gold);
 }
 
-/* --- STYLE DU LOGO (SANS EFFET ACTIF) --- */
-.logo a {
-    text-decoration: none;
-    color: #ffffff;
-    transition: 0.3s;
-    border-left: none !important; /* On s'assure qu'il n'y a jamais de barre */
+/* --- CONTENU PRINCIPAL --- */
+main {
+    flex-grow: 1;
+    overflow-x: hidden;
 }
 
-.logo a:hover {
-    color: var(--title-color); /* Juste un changement de couleur au survol, pas de fond */
-    background: none !important;
+/* --- RESPONSIVITÉ TEMPS RÉEL : RÉDUCTION MODÉRÉE --- */
+@media (max-width: 900px) {
+    :root {
+        --sidebar-width: 180px; /* Taille intermédiaire */
+    }
+
+    .logo {
+        font-size: 1.1rem;
+        padding: 20px 15px;
+    }
+
+    .sidebar ul li a {
+        padding: 12px 15px;
+        font-size: 0.85rem; /* Texte un peu plus petit pour tenir */
+    }
+
+    .menu-icon {
+        margin-right: 10px;
+    }
+
+    .menu-title {
+        padding: 0 15px;
+        font-size: 0.65rem;
+    }
+}
+
+/* --- TRÈS PETITS ÉCRANS --- */
+@media (max-width: 480px) {
+    :root {
+        --sidebar-width: 140px;
+    }
+    
+    .sidebar ul li a {
+        padding: 10px;
+    }
 }
