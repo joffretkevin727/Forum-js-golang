@@ -33,6 +33,7 @@ CREATE TABLE topics (
     status     ENUM('open', 'closed', 'archived') NOT NULL DEFAULT 'open',
     author_id  INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    vote_count INT NOT NULL DEFAULT 0,
 
     FOREIGN KEY (author_id)
         REFERENCES users(id)
