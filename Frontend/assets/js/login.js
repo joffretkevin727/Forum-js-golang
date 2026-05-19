@@ -1,6 +1,8 @@
 const boxSignIn = document.querySelector('.box.active');
 const boxSignUp = document.querySelector('.sign-up');
 
+boxSignUp.style.display = 'none';
+
 document.querySelectorAll('.row-start').forEach(rowStart => {
     rowStart.querySelectorAll('p').forEach((tab, index) => {
         tab.addEventListener('click', () => {
