@@ -1,0 +1,231 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #FFF8EF;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+    height: 60px;
+    box-sizing: border-box;
+}
+
+.header-left, .header-right {
+    flex: 1;
+    display: flex;
+}
+
+.header-right {
+    justify-content: flex-end;
+}
+
+.header-center {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 450px;
+    background-color: #f1f3f4;
+    border-radius: 24px;
+    padding: 0 16px;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar:focus-within {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 2px #8B0000;
+}
+
+.search-bar input {
+    width: 100%;
+    height: 40px;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    color: #3c4043;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #5f6368;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar button:hover {
+    color: #1a73e8;
+}
+
+.profile-icon {
+    color: #5f6368;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.profile-icon:hover {
+    background-color: #f1f3f4;
+    color: #1a73e8;
+}
+
+.forum-name {
+    font-size: 48px;
+    color: #610000;
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 700;
+}
+
+.main-feed {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+ }
+
+.row-main {
+    display: flex;
+    flex-direction: row;
+}
+
+.sub-title {
+    font-size: 18px;
+    color: #5A403C;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 300;
+    margin-bottom: 22px;
+}
+
+.row-filter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.bubble {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #5A403C;
+    margin-left: 10px;
+    background-color: #EEE7DE;
+    border-radius: 20px;
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.active {
+    color: white;
+    background-color: #610000;
+}
+
+.filter-by {
+    font-size: 14px;
+    color: #5A403C;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(90, 64, 60, 0.5);
+    margin-bottom: 20px;
+}
+
+.card {
+    width: 80%;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 32px;
+}
+
+.header-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    background-color: white;
+}
+
+.pseudo {
+    font-size: 14px;
+    color: #1E1B16;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+ }
+
+.post-date {
+    font-size: 12px;
+    color: #5A403C;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 400;
+}
+
+.tag {
+    font-size: 10px;
+    margin-left: 10px;
+    background-color: #EEE7DE;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 600;
+}
+
+.post-infos {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.tags {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+
+.topic-title {
+    color: black;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+p {
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.topic-text {
+    color: #5A403C;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0);
+}
