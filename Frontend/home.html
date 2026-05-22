@@ -13,14 +13,14 @@
 <header class="main-header">
     <div class="header-left"></div>
 
-    <div class="header-center">
-        <form class="search-bar">
-            <input type="text" placeholder="Rechercher un topic..." aria-label="Rechercher">
-            <button type="submit" aria-label="Lancer la recherche">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            </button>
-        </form>
-    </div>
+        <div class="header-center">
+            <form class="search-bar">
+                <input type="text" placeholder="Rechercher un topic..." aria-label="Rechercher">
+                <button type="submit" aria-label="Lancer la recherche">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </form>
+        </div>
 
     <div class="header-right">
         <a href="#profile" class="profile-icon" aria-label="Mon profil">
@@ -29,10 +29,35 @@
     </div>
 </header>
 
+<div class="header-line"></div>
+
     <main>
         <div class="row-main">
             <div class="col-side">
-                <p>Recipe books</p>
+                <p class="side-title">Recipe books</p>
+                <div class ="recipe">
+                    <img src="assets/icons/croissant.svg" alt="Recipes Icon" class="icon-recipes">
+                    All Recipes
+                </div>
+                <div class ="recipes active">
+                    <img src="assets/icons/croissant.svg" alt="Recipes Icon" class="icon-recipes">
+                    Lunch
+                </div>
+                <div class ="recipe">
+                    <img src="assets/icons/croissant.svg" alt="Recipes Icon" class="icon-recipes">
+                    Midnight
+                </div>
+                <div class ="recipe">
+                    <img src="assets/icons/croissant.svg" alt="Recipes Icon" class="icon-recipes">
+                    4h
+                </div>
+                <div class ="new-discussion">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-plus">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Start a discussion
+                </div>
             </div>
             <div class="main-feed">
             <div class="col-topic">
@@ -62,17 +87,77 @@
                     </div>
 
                     <div class="topic-text">
-                        <p>I've been experiencing issue with the recipe to cook this pastryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse, repudiandae, voluptates. Accusamus deserunt dignissimos explicabo facere facilis fugit id iste numquam obcaecati quaerat? Dignissimos facilis iure libero quibusdam unde ut.</p>
                     </div>
+
 
                     <div class="line"></div>
 
-                    <div class="vote">
+                    <div class="interactions-btn">
+                        <div class="votes-btn">
+                            <div class="up-vote">
+                                <img src="assets/icons/upvote.svg" alt="Recipes Icon" class="icon-recipes">
+                            </div>
+                            <p>20</p>
+                            <div class="width-spacer"></div>
+                            <div class="down-vote">
+                                <img src="assets/icons/downvote.svg" alt="Recipes Icon" class="icon-recipes">
+                            </div>
+                            <p>25</p>
+                        </div>
+                        <div class="join-discussion">
+                            <p>Join Discussion</p>
+                            <img src="assets/icons/arrowleft.svg" alt="Recipes Icon" class="icon-recipes">
+                        </div>
+                    </div>
 
+                </div>
+
+                <div class="card">
+                    <div class="header-card">
+                        <div class="post-infos">
+                            <p class="pseudo">Jean sebastien</p>
+                            <p class="post-date">2 hours ago</p>
+                        </div>
+                        <div class="tags">
+                            <p class="tag">#Croissant</p>
+                            <p class="tag">#Cannelés</p>
+                        </div>
+                    </div>
+
+                    <div class="topic-title">
+                        <p>Want to know the secret of the gateau basque recipe ?</p>
+                    </div>
+
+                    <div class="topic-text">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse, repudiandae, voluptates. Accusamus deserunt dignissimos explicabo facere facilis fugit id iste numquam obcaecati quaerat? Dignissimos facilis iure libero quibusdam unde ut.</p>
+                    </div>
+
+
+                    <div class="line"></div>
+
+                    <div class="interactions-btn">
+                        <div class="votes-btn">
+                            <div class="up-vote">
+                                <img src="assets/icons/upvote.svg" alt="Recipes Icon" class="icon-recipes">
+                            </div>
+                            <p>20</p>
+                            <div class="width-spacer"></div>
+                            <div class="down-vote">
+                                <img src="assets/icons/downvote.svg" alt="Recipes Icon" class="icon-recipes">
+                            </div>
+                            <p>25</p>
+                        </div>
+                        <div class="down-vote">
+                            <p>Join Discussion</p>
+                            <img src="assets/icons/arrowleft.svg" alt="Recipes Icon" class="icon-recipes">
+                        </div>
                     </div>
 
                 </div>
             </div>
+                <div class="invisible">
+                </div>
             </div>
         </div>
     </main>

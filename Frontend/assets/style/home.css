@@ -2,7 +2,14 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+body {
     background-color: #FFF8EF;
+}
+
+img {
+    background-color: transparent;
 }
 
 .main-header {
@@ -29,16 +36,101 @@
     justify-content: center;
 }
 
+.icon-recipes {
+    margin-right: 16px;
+}
+
+.header-line {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(90, 64, 60, 0.15);
+    margin-bottom: 32px;
+}
+
+.invisible {
+    padding: 16px;
+    background-color: #FFF8F0;
+    margin: 16px 32px;
+    border-radius: 30px;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 16px;
+    width: 30%;
+}
+
+.col-side {
+    padding: 16px;
+    background-color: #FFF8F0;
+    margin: 16px 32px;
+    border-radius: 30px;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 16px;
+    box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.04);
+    width: 30%;
+}
+
+.new-discussion {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFCE5F;
+    padding: 16px 32px;
+    border-radius: 32px;
+    color: #755700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+}
+
+.recipes.active {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    background-color: #8B0000;
+    padding: 8px 16px;
+    border-radius: 32px;
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin-bottom: 8px;
+}
+
+.recipes,
+.recipe {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    padding: 8px 16px;
+    margin-bottom: 8px;
+    color: black;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.col-topic {
+    width: 100%;
+}
+
+.side-title {
+    color: #8B0000;
+    margin-bottom: 16px;
+    font-weight: 800;
+    font-family: 'Epilogue', sans-serif;
+}
+
 .search-bar {
     display: flex;
     align-items: center;
     width: 100%;
     max-width: 450px;
-    background-color: #f1f3f4;
+    background-color: white;
     border-radius: 24px;
     padding: 0 16px;
     transition: background-color 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input,
+.search-bar button {
+    background-color: transparent;
 }
 
 .search-bar:focus-within {
@@ -72,12 +164,14 @@
 }
 
 .profile-icon {
-    color: #5f6368;
+    color: white;
+    background-color: #8B0000;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
+    padding: 10px;
     border-radius: 50%;
     transition: background-color 0.2s, color 0.2s;
 }
@@ -94,15 +188,22 @@
     font-weight: 700;
 }
 
+.icon-plus {
+    background-color: transparent !important;
+    background: none !important;
+}
+
 .main-feed {
     display: flex;
     justify-content: center;
-    width: 100%;
  }
 
 .row-main {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    align-items: flex-start;
 }
 
 .sub-title {
@@ -134,6 +235,7 @@
     font-weight: 600;
     margin-top: 0;
     margin-bottom: 0;
+    cursor: pointer;
 }
 
 .active {
@@ -151,17 +253,19 @@
 .line {
     width: 100%;
     height: 1px;
-    background-color: rgba(90, 64, 60, 0.5);
+    background-color: rgba(90, 64, 60, 0.15);
     margin-bottom: 20px;
 }
 
 .card {
-    width: 80%;
-    border-radius: 20px;
+    width: 100%;
+    border-radius: 32px;
     display: flex;
     flex-direction: column;
     background-color: white;
     padding: 32px;
+    box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.04);
+    margin-bottom: 16px;
 }
 
 .header-card {
@@ -228,4 +332,62 @@ p {
     font-weight: 400;
     margin-bottom: 10px;
     background-color: rgba(255, 255, 255, 0);
+}
+
+.interactions-btn {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.votes-btn {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    align-items: center;
+}
+
+.up-vote {
+    background-color: white;
+    cursor: pointer;
+}
+
+.down-vote {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    color: #610000;
+    cursor: pointer;
+}
+
+.join-discussion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    color: #610000;
+    cursor: pointer;
+}
+
+.down-vote p {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+}
+
+.votes-btn p {
+    color: #1E1B16;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.width-spacer {
+    width: 20px;
 }
