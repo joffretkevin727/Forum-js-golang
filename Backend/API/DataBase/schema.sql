@@ -2,6 +2,18 @@
 -- SCHEMA SQL - Plateforme de forum (Version MySQL propre)
 -- ============================================================
 
+-- Création de la base si elle n'existe pas (optionnel mais pratique)
+CREATE DATABASE IF NOT EXISTS forum_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE forum_db;
+
+-- On supprime les tables si elles existent déjà pour repartir à zéro (ordre inverse des clés étrangères)
+DROP TABLE IF EXISTS message_votes;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS topic_tags;
+DROP TABLE IF EXISTS topics;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS users;
+
 -- ========================
 -- TABLE USERS
 -- ========================
@@ -94,5 +106,3 @@ CREATE TABLE message_votes (
         REFERENCES messages(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
-
--- ENGINE=InnoDB sert a indiquer quel moteur se fais utiliser par Mysql
