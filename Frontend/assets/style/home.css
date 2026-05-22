@@ -81,7 +81,7 @@ img {
     cursor: pointer;
 }
 
-.recipes.active {
+.recipe.active {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -94,7 +94,6 @@ img {
     margin-bottom: 8px;
 }
 
-.recipes,
 .recipe {
     display: flex;
     flex-direction: row;
@@ -103,6 +102,14 @@ img {
     margin-bottom: 8px;
     color: black;
     font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.recipe .icon-recipes {
+    filter: brightness(0);
+}
+
+.recipe.active .icon-recipes {
+    filter: brightness(0) invert(1);
 }
 
 .col-topic {
@@ -169,9 +176,8 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    padding: 10px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     transition: background-color 0.2s, color 0.2s;
 }
