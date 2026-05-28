@@ -2,10 +2,9 @@ package main
 
 import (
 	"database/sql"
+	"forum/router"
 	"log"
 	"net/http"
-
-	"forum/router"
 
 	_ "github.com/go-sql-driver/mysql"
 )
