@@ -1,0 +1,144 @@
+:root {
+    --sidebar-bg: #610000;
+    --sidebar-width: 260px;
+    --title-color: #FFD700;
+    --link-color: #ffffff;
+    --link-hover-bg: #4d0909;
+    --link-hover-color: #FFD700;
+    --accent-color: #FFD700;
+    --filter-white: invert(100%) sepia(0%) saturate(7500%) hue-rotate(0deg) brightness(100%) contrast(100%);
+    --filter-gold: invert(85%) sepia(51%) saturate(2843%) hue-rotate(3deg) brightness(105%) contrast(105%);
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f8fa;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    color: white;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease; /* Transition fluide lors du redimensionnement */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    padding: 25px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.logo a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.menu-group {
+    margin-top: 20px;
+}
+
+.menu-title {
+    padding: 0 25px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--title-color);
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-left: 4px solid transparent;
+    transition: 0.2s;
+    white-space: nowrap; /* Empêche le texte de revenir à la ligne */
+}
+
+.menu-icon {
+    width: 18px !important;
+    height: 18px !important;
+    margin-right: 15px;
+    filter: var(--filter-white);
+    flex-shrink: 0;
+}
+
+/* --- SURVOL ET ÉTAT ACTIF --- */
+.sidebar ul li a:hover, 
+.sidebar ul li a.active {
+    background-color: var(--link-hover-bg);
+    color: var(--link-hover-color);
+    border-left: 4px solid var(--accent-color);
+}
+
+.sidebar ul li a:hover .menu-icon,
+.sidebar ul li a.active .menu-icon {
+    filter: var(--filter-gold);
+}
+
+/* --- CONTENU PRINCIPAL --- */
+main {
+    flex-grow: 1;
+    overflow-x: hidden;
+}
+
+/* --- RESPONSIVITÉ TEMPS RÉEL : RÉDUCTION MODÉRÉE --- */
+@media (max-width: 900px) {
+    :root {
+        --sidebar-width: 180px; /* Taille intermédiaire */
+    }
+
+    .logo {
+        font-size: 1.1rem;
+        padding: 20px 15px;
+    }
+
+    .sidebar ul li a {
+        padding: 12px 15px;
+        font-size: 0.85rem; /* Texte un peu plus petit pour tenir */
+    }
+
+    .menu-icon {
+        margin-right: 10px;
+    }
+
+    .menu-title {
+        padding: 0 15px;
+        font-size: 0.65rem;
+    }
+}
+
+/* --- TRÈS PETITS ÉCRANS --- */
+@media (max-width: 480px) {
+    :root {
+        --sidebar-width: 140px;
+    }
+    
+    .sidebar ul li a {
+        padding: 10px;
+    }
+}
