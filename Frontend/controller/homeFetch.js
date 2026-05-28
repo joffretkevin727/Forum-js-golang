@@ -1,6 +1,6 @@
 let currentPage = 1;
 const itemsPerPage = 10;
-
+// /topics
 function setupPagination(totalItems) {
     const container = document.getElementById('page-numbers-container');
     container.innerHTML = "";
@@ -29,6 +29,22 @@ function setupPagination(totalItems) {
 }
 
 setupPagination(25);
+
+fetch('http://localhost:6767/topics')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur serveur Go : ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Topics reçus de Go :", data);
+
+        renderCards(data);
+    })
+    .catch(error => {
+        console.error("Impossible de joindre le serveur Go :", error);
+    });
 
 const fakeData = [
     {
