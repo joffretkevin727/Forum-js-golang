@@ -191,7 +191,7 @@ img {
 
 .forum-name {
     font-size: 48px;
-    color: #610000;
+    color: #8B0000;
     font-family: 'Epilogue', sans-serif;
     font-weight: 700;
 }
@@ -248,7 +248,7 @@ img {
 
 .active {
     color: white;
-    background-color: #610000;
+    background-color: #8B0000;
 }
 
 .filter-by {
@@ -398,4 +398,61 @@ p {
 
 .width-spacer {
     width: 20px;
+}
+
+.pagination{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.btn-pagination{
+    color: #5A403C;
+    background-color: transparent;
+    border: 1px solid #E3BEB8;
+    border-radius: 200px;
+    width: 35px;
+    height: 35px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.page-number {
+    color: #ffffff;
+    background-color: #610000;
+    width: 35px;
+    height: 35px;
+
+    border-radius: 50%;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 5px;
+    cursor: pointer;
+}
+
+.page-number {
+    color: #000000;
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+.page-number.active-page {
+    background-color: #610000;
+    color: white;
 }

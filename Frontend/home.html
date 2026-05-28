@@ -61,7 +61,7 @@
             </div>
             <div class="main-feed">
             <div class="col-topic">
-                <p class="forum-name">Biscuit forum</p>
+                <p class="forum-name">La Kevin dorée</p>
                 <p class="sub-title">Exchange the secret of your favorite pastry</p>
                 <div class="row-filter">
                     <p class="filter-by">Filter by :</p>
@@ -70,48 +70,7 @@
                 </div>
                 <div class="line"></div>
 
-                <div class="card">
-                    <div class="header-card">
-                        <div class="post-infos">
-                            <p class="pseudo">Jean sebastien</p>
-                            <p class="post-date">2 hours ago</p>
-                        </div>
-                        <div class="tags">
-                            <p class="tag">#Croissant</p>
-                            <p class="tag">#Cannelés</p>
-                        </div>
-                    </div>
-
-                    <div class="topic-title">
-                        <p>Want to know the secret of the gateau basque recipe ?</p>
-                    </div>
-
-                    <div class="topic-text">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse, repudiandae, voluptates. Accusamus deserunt dignissimos explicabo facere facilis fugit id iste numquam obcaecati quaerat? Dignissimos facilis iure libero quibusdam unde ut.</p>
-                    </div>
-
-
-                    <div class="line"></div>
-
-                    <div class="interactions-btn">
-                        <div class="votes-btn">
-                            <div class="up-vote">
-                                <img src="assets/icons/upvote.svg" alt="Recipes Icon" class="icon-recipes">
-                            </div>
-                            <p>20</p>
-                            <div class="width-spacer"></div>
-                            <div class="down-vote">
-                                <img src="assets/icons/downvote.svg" alt="Recipes Icon" class="icon-recipes">
-                            </div>
-                            <p>25</p>
-                        </div>
-                        <div class="join-discussion">
-                            <p>Join Discussion</p>
-                            <img src="assets/icons/arrowleft.svg" alt="Recipes Icon" class="icon-recipes">
-                        </div>
-                    </div>
-
-                </div>
+                <div id="cards-container"></div>
 
                 <div class="card">
                     <div class="header-card">
@@ -155,14 +114,25 @@
                     </div>
 
                 </div>
+
+                <div class="pagination">
+                    <div><img src="assets/icons/arrowright.svg" alt="Previous" class="btn-pagination" id="btn-prev"></div>
+
+                    <div id="page-numbers-container" style="display: flex;"></div>
+
+                    <div><img src="assets/icons/arrowleft.svg" alt="Next" class="btn-pagination" id="btn-next"></div>
+                </div>
+
             </div>
                 <div class="invisible">
                 </div>
             </div>
+
         </div>
     </main>
 
 <script src="assets/js/home.js"></script>
+<script src="controller/homeFetch.js"></script>
 
 </body>
 </html>
