@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Kévin Dorée</title>
+    <link rel="stylesheet" href="../Public/Css/create_topic.css">
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+    <main>
+        <div class="topic-info">
+            <form action="../Public/home.html" method="post" class="topic-creation">
+
+                <div class="titre-bloc">
+                    <label for="titre">Donnez un titre&nbsp;: </label>
+                    <input type="text" placeholder="Comment faire des cookies comme mamie" name="titre" id="titre" required />
+                </div>
+
+                <div class="corps-bloc">
+                    <label for="corps">Décrivez le sujet / question&nbsp;: </label>
+                    <textarea placeholder="Je trouve les gâteaux de ma grand mère très bon ! Je souhaite pouvoir en refaire, elle m'a passé la recette et m'a mis au défi de faire comme elle, mais rien à faire je n'y arrive pas du tout !!! Si quelqu'un a des conseils a me donner, je suis débutant..." name="corps" id="corps" rows="10" required></textarea>
+                </div>
+
+                <div class="tag-bloc">
+                    <label for="tag-input">Ajouter des tags&nbsp;:</label>
+
+                    <div id="tags-container" class="tags-container"></div>
+
+                    <input type="text" id="tag-input" list="default-tags" placeholder="Rechercher ou créer un tag..." />
+
+                    <datalist id="default-tags">
+                        <option value="cookies">
+                        <option value="cannelé">
+                        <option value="muffin">
+                        <option value="croissant">
+                        <option value="painauchocolat">
+                    </datalist>
+
+                    <input type="hidden" name="tags" id="tags-hidden-input">
+                </div>
+
+                <div class="submit-bloc">
+                    <button type="submit">Créer le sujet</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+    <script src="../Public/Script/create_topic.js"></script>
+</body>
+
+</html>

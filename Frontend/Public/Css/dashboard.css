@@ -1,0 +1,129 @@
+:root {
+    --sidebar-bg: #610000;
+    --sidebar-width: 260px;
+    --title-color: #FFD700;
+    --link-color: #ffffff;
+    --link-hover-bg: #4d0909;
+    --link-hover-color: #FFD700;
+    --accent-color: #FFD700;
+    --filter-white: invert(100%) sepia(0%) saturate(7500%) hue-rotate(0deg) brightness(100%) contrast(100%);
+    --filter-gold: invert(85%) sepia(51%) saturate(2843%) hue-rotate(3deg) brightness(105%) contrast(105%);
+}
+
+/* --- STRUCTURE PRINCIPALE --- */
+main {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    align-items: center;    /* Centre verticalement au milieu de l'écran */
+    justify-content: center; /* Centre horizontalement par rapport à l'espace restant */
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Fond en motif répété */
+.background-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url('../Assets/images/gateau_fond.jpg');
+    background-repeat: repeat;
+    background-attachment: local;
+    opacity: 1;
+}
+
+/* Conteneur des bulles (+20% de largeur) */
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 960px; 
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Espace entre les lignes */
+}
+
+/* --- STYLE DES BULLES --- */
+.bulle-info {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 30px 35px; /* Padding agrandi */
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.bulle-info h2 {
+    color: var(--sidebar-bg);
+    margin-bottom: 15px;
+    font-size: 1.4rem; /* Titre agrandi */
+    text-align: center;
+}
+
+.bulle-info p {
+    line-height: 1.6;
+}
+
+/* --- MISE EN PAGE DES STATS --- */
+
+/* Grille des 3 bulles du haut */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.stat-card {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.2rem; /* Chiffre agrandi */
+    font-weight: bold;
+    color: var(--sidebar-bg);
+    margin-top: 10px;
+}
+
+/* Section 24h */
+.stats-24h {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.item-24h {
+    font-size: 1.1rem;
+}
+
+.item-24h strong {
+    color: #27ae60; /* Vert pour l'activité positive */
+}
+
+/* --- RESPONSIVITÉ --- */
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: 1fr; /* Empilement sur tablette/mobile */
+    }
+
+    .stats-24h {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .content-wrapper {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 20px;
+    }
+
+    .bulle-info {
+        padding: 20px;
+    }
+}

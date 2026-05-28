@@ -1,0 +1,195 @@
+/* ==========================================================================
+   VARIABLES DE PERSONNALISATION (Faciles à modifier)
+   ========================================================================== */
+/* ==========================================================================
+   VARIABLES DE PERSONNALISATION (Adaptées à votre thème en plus clair)
+   ========================================================================== */
+:root {
+    /* Couleurs principales basées sur votre charte */
+    --form-bg-color: #ffffff;         /* Fond du formulaire blanc pour la clarté */
+    --body-bg-color: #fdf8f8;         /* Un fond de page très légèrement rosé/chaud (rappel du bordeaux) */
+    --text-color: #3a0000;            /* Texte très sombre mais bordeaux au lieu de noir */
+    --text-light: #8c6b6b;            /* Texte secondaire adouci */
+    
+    /* Bordures et Éléments de saisie */
+    --border-color: #d9c5c5;          /* Bordures des champs légèrement teintées */
+    --border-focus: #a81c1c;          /* Version plus claire et vive de votre bordeaux au clic */
+    --input-bg-color: #fffcfc;        /* Fond des champs très légèrement chaud */
+    
+    /* Bouton Soumettre */
+    --btn-bg: #8a0c0c;                /* Un rouge bordeaux plus lumineux que le #610000 pour le bouton */
+    --btn-bg-hover: #610000;          /* Au survol, on retrouve exactement votre couleur de sidebar */
+    --btn-text: #ffffff;              /* Texte blanc pour le contraste */
+    
+    /* Styles spécifiques aux TAGS */
+    --tag-default-color: #b58900;     /* Un doré/ambre plus sombre que le #FFD700 pour rester lisible sur fond clair */
+    --tag-created-color: #2e7d32;     /* Vert pour les tags créés (inchangé pour le sens "nouveau") */
+    --tag-bg: #fff9e6;                /* Un fond jaune/or très clair et doux derrière les tags */
+    
+    /* Typographie et Espacements */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --border-radius: 8px;             /* Angles un peu plus arrondis pour un look moderne */
+    --transition-speed: 0.25s;
+}
+
+/* ==========================================================================
+   STYLE DU FORMULAIRE
+   ========================================================================== */
+
+/* Style global de la page (Optionnel, juste pour la présentation) */
+body {
+    background-color: var(--body-bg-color);
+    font-family: var(--font-family);
+    color: var(--text-color);
+    margin: 0;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Permet à la page de s'agrandir si le formulaire dépasse */
+    padding: 20px;     /* Évite que la bulle colle aux bords de l'écran sur mobile */
+    box-sizing: border-box;
+}
+
+.background-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url('../Assets/images/fond-gris-gateau.jpg');
+    background-repeat: repeat;
+    background-attachment: local;
+    opacity: 1; 
+}
+
+/* Conteneur principal du formulaire */
+.topic-info {
+    width: 100%;       /* Prend toute la largeur disponible sur petit écran */
+    max-width: 650px;  /* Ne dépassera jamais 650px sur grand écran (ordinateur) */
+    background-color: var(--form-bg-color);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+/* Espacement entre chaque bloc de champ (Titre, Corps, Tags) */
+.titre-bloc, 
+.corps-bloc, 
+.tag-bloc,
+.submit-bloc {
+    margin-bottom: 22px;
+}
+
+/* Style des labels */
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* Style commun pour les champs Input et Textarea */
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg-color);
+    font-family: var(--font-family);
+    font-size: 15px;
+    color: var(--text-color);
+    box-sizing: border-box; /* Évite que le padding élargisse le champ hors de la boîte */
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+/* Style du Textarea (Corps du sujet) */
+textarea {
+    resize: vertical; /* Permet à l'utilisateur de l'agrandir uniquement vers le bas */
+    min-height: 120px;
+}
+
+/* Effet au clic (Focus) sur les inputs et textarea */
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15); /* Petit halo lumineux */
+    background-color: #ffffff;
+}
+
+/* Style du bouton de soumission */
+.submit-bloc button {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    width: 100%; /* Bouton pleine largeur (Modifiable en enlevant cette ligne) */
+    transition: background-color var(--transition-speed);
+}
+
+.submit-bloc button:hover {
+    background-color: var(--btn-bg-hover);
+}
+
+/* ==========================================================================
+   STYLE DE LA SECTION TAGS
+   ========================================================================== */
+
+/* Conteneur des tags sélectionnés */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+/* Style de base d'un tag */
+.tag {
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: underline;
+    border-radius: var(--border-radius);
+    background-color: var(--tag-bg);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s ease;
+}
+
+.tag:hover {
+    transform: scale(1.02);
+}
+
+/* Tag par défaut (Existant) -> BLEU */
+.tag.default-tag {
+    color: var(--tag-default-color);
+}
+
+/* Tag créé par l'utilisateur -> VERT */
+.tag.created-tag {
+    color: var(--tag-created-color);
+}
+
+/* Petit bouton de suppression (la croix 'x') */
+.tag-remove {
+    font-size: 14px;
+    color: var(--text-light);
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-block;
+    padding: 0 2px;
+}
+
+.tag-remove:hover {
+    color: #cc0000;
+}
