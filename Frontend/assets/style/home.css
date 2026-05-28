@@ -92,6 +92,7 @@ img {
     color: white;
     font-family: 'Plus Jakarta Sans', sans-serif;
     margin-bottom: 8px;
+    cursor: pointer;
 }
 
 .recipe {
@@ -102,6 +103,7 @@ img {
     margin-bottom: 8px;
     color: black;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
 }
 
 .recipe .icon-recipes {
