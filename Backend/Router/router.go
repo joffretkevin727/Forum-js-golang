@@ -33,14 +33,10 @@ func New(db *sql.DB) *http.ServeMux {
 	// ============================================================
 	routeur := http.NewServeMux()
 
-	// GET    : Récupère des données depuis le serveur sans les modifier (ex: lire un sujet).
-	// POST   : Envoie de nouvelles données au serveur pour créer une ressource (ex: publier un message).
-	// PUT    : Remplace intégralement une ressource existante par les nouvelles données fournies.
-	// DELETE : Supprime définitivement une ressource spécifique du serveur (ex: effacer un topic).
-
 	// ============================================================
 	// ROUTES : USER
 	// ============================================================
+	routeur.HandleFunc("POST /users/login", userController.LoginHandler)
 	routeur.HandleFunc("POST /users", userController.CreateUserHandler)
 	routeur.HandleFunc("GET /users/{username}", userController.GetUserHandler)
 	routeur.HandleFunc("PUT /users/{id}/ban", userController.BanUserHandler)
@@ -48,32 +44,36 @@ func New(db *sql.DB) *http.ServeMux {
 	// ============================================================
 	// ROUTES : TOPIC
 	// ============================================================
-	routeur.HandleFunc("POST /topics", topicController.CreateTopicHandler)
 	routeur.HandleFunc("GET /topics", topicController.GetTopicsHandler)
 	routeur.HandleFunc("GET /topics/{id}", topicController.GetTopicHandler)
-	routeur.HandleFunc("PUT /topics/{id}", topicController.UpdateTopicHandler)
-	routeur.HandleFunc("DELETE /topics/{id}", topicController.DeleteTopicHandler)
+	// Routes protégées par le Auth Middleware
+	routeur.HandleFunc("POST /topics", AuthRequired(topicController.CreateTopicHandler))
+	routeur.HandleFunc("PUT /topics/{id}", AuthRequired(topicController.UpdateTopicHandler))
+	routeur.HandleFunc("DELETE /topics/{id}", AuthRequired(topicController.DeleteTopicHandler))
 
 	// ============================================================
 	// ROUTES : TAG
 	// ============================================================
-	routeur.HandleFunc("POST /tags", tagController.CreateTagHandler)
 	routeur.HandleFunc("GET /tags", tagController.GetAllTagsHandler)
-	routeur.HandleFunc("POST /topics/tags", tagController.AttachTagHandler)
 	routeur.HandleFunc("GET /topics/{topic_id}/tags", tagController.GetTagsByTopicHandler)
+	// Routes protégées par le Auth Middleware
+	routeur.HandleFunc("POST /tags", AuthRequired(tagController.CreateTagHandler))
+	routeur.HandleFunc("POST /topics/tags", AuthRequired(tagController.AttachTagHandler))
 
 	// ============================================================
 	// ROUTES : MESSAGE
 	// ============================================================
-	routeur.HandleFunc("POST /messages", messageController.CreateMessageHandler)
 	routeur.HandleFunc("GET /topics/{topic_id}/messages", messageController.GetMessagesByTopicHandler)
-	routeur.HandleFunc("DELETE /messages/{id}", messageController.DeleteMessageHandler)
+	// Routes protégées par le Auth Middleware
+	routeur.HandleFunc("POST /messages", AuthRequired(messageController.CreateMessageHandler))
+	routeur.HandleFunc("DELETE /messages/{id}", AuthRequired(messageController.DeleteMessageHandler))
 
 	// ============================================================
 	// ROUTES : VOTE
 	// ============================================================
-	routeur.HandleFunc("POST /votes", voteController.VoteHandler)
 	routeur.HandleFunc("GET /messages/{message_id}/score", voteController.GetScoreHandler)
+	// Route protégée par le Auth Middleware
+	routeur.HandleFunc("POST /votes", AuthRequired(voteController.VoteHandler))
 
 	return routeur
 }

@@ -13,29 +13,31 @@ func main() {
 	// ============================================================
 	// CONNEXION À LA BASE DE DONNÉES
 	// ============================================================
-	// root:root correspond aux identifiants par défaut de MAMP
 	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/forum_db?parseTime=true")
 	if err != nil {
 		log.Fatal("Erreur de configuration DB:", err)
 	}
 	defer db.Close()
 
-	// Vérifie si la connexion avec la base de données est réellement établie
 	err = db.Ping()
 	if err != nil {
 		log.Fatal("Impossible de joindre la base de données:", err)
 	}
 
 	// ============================================================
-	// INITIALISATION DU ROUTEUR
+	// INITIALISATION DU ROUTEUR ET MIDDLEWARES
 	// ============================================================
 	apiRouter := router.New(db)
+
+	// Applique le middleware CORS global autour de ton routeur
+	routerAvecCORS := router.EnableCORS(apiRouter)
 
 	// ============================================================
 	// LANCEMENT DU SERVEUR HTTP
 	// ============================================================
 	log.Println("Serveur démarré sur http://localhost:6767")
-	err = http.ListenAndServe(":6767", apiRouter)
+	// Utilise bien routerAvecCORS au lieu de apiRouter
+	err = http.ListenAndServe(":6767", routerAvecCORS)
 	if err != nil {
 		log.Fatal("Erreur lors du lancement du serveur:", err)
 	}

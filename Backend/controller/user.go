@@ -6,6 +6,8 @@ import (
 	"strconv"
 
 	model "forum/model"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserController struct {
@@ -26,6 +28,46 @@ func (c *UserController) GetUserHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	json.NewEncoder(w).Encode(u)
+}
+
+func (c *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var body struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		http.Error(w, `{"message":"Format JSON invalide"}`, http.StatusBadRequest)
+		return
+	}
+
+	// Récupère l'utilisateur par son email
+	u, err := c.Model.GetByEmail(body.Email)
+	if err != nil {
+		http.Error(w, `{"message":"Identifiants invalides"}`, http.StatusUnauthorized)
+		return
+	}
+
+	// Vérifie si l'utilisateur est banni
+	if u.IsBanned {
+		http.Error(w, `{"message":"Votre compte a été banni"}`, http.StatusForbidden)
+		return
+	}
+
+	// Compare le mot de passe reçu avec le hash de la base de données
+	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(body.Password))
+	if err != nil {
+		http.Error(w, `{"message":"Identifiants invalides"}`, http.StatusUnauthorized)
+		return
+	}
+
+	// Renvoie la structure attendue par ton fichier connexion.js
+	enveloppe := map[string]interface{}{
+		"user": u,
+	}
+	json.NewEncoder(w).Encode(enveloppe)
 }
 
 // CreateUserHandler crée un nouvel utilisateur
