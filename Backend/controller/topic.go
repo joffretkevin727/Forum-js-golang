@@ -2,83 +2,102 @@ package controller
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
-	"forum/model"
+	model "forum/model"
 )
 
 type TopicController struct {
 	Model *model.TopicModel
 }
 
-// GetTopicHandler récupère un seul sujet par son ID
-func (controleur *TopicController) GetTopicHandler(w http.ResponseWriter, r *http.Request) {
+// GetTopicHandler récupère un sujet par son ID
+func (c *TopicController) GetTopicHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
-	idStr := r.PathValue("id")
-	if idStr == "" {
-		http.Error(w, "Le paramètre ID est requis", http.StatusBadRequest)
-		return
-	}
-
-	// CONVERSION : Convertit la chaîne en entier
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		http.Error(w, "L'ID doit être un nombre valide", http.StatusBadRequest)
+		http.Error(w, "ID invalide", http.StatusBadRequest)
 		return
 	}
-
-	// Appel au Modèle (on passe la variable id propre)
-	topic, err := controleur.Model.GetByID(id)
+	topic, err := c.Model.GetByID(id)
 	if err != nil {
-		log.Printf("Erreur lors de la récupération du topic %d: %v", id, err)
-		http.Error(w, "Topic introuvable", http.StatusNotFound)
+		http.Error(w, "Sujet introuvable", http.StatusNotFound)
 		return
 	}
-
 	json.NewEncoder(w).Encode(topic)
 }
 
-// GetTopicsHandler récupère une liste de sujets paginée
-func (controleur *TopicController) GetTopicsHandler(w http.ResponseWriter, r *http.Request) {
+// GetTopicsHandler récupère la liste des sujets avec pagination
+func (c *TopicController) GetTopicsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
-	// 1. Récupération des paramètres de l'URL (?page=X&limit=Y)
-	pageStr := r.URL.Query().Get("page")
-	limitStr := r.URL.Query().Get("limit")
-
-	// 2. Valeurs par défaut si l'utilisateur ne précise rien
-	page := 1
-	limit := 10
-
-	// 3. Conversion de la page en entier
-	if pageStr != "" {
-		pageValide, err := strconv.Atoi(pageStr)
-		if err == nil && pageValide > 0 {
-			page = pageValide
-		}
+	limite, _ := strconv.Atoi(r.URL.Query().Get("limite"))
+	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
+	if limite <= 0 {
+		limite = 10
 	}
-
-	// 4. Conversion de la limite en entier
-	if limitStr != "" {
-		limiteValide, err := strconv.Atoi(limitStr)
-		if err == nil && limiteValide > 0 {
-			limit = limiteValide
-		}
-	}
-
-	// 5. Calcul du décalage (l'offset) pour MySQL
-	offset := (page - 1) * limit
-
-	// 6. Appel au modèle avec des paramètres clairs
-	listeTopics, err := controleur.Model.GetMany(limit, offset)
+	topics, err := c.Model.GetMany(limite, offset)
 	if err != nil {
-		http.Error(w, "Erreur lors de la récupération", http.StatusInternalServerError)
+		http.Error(w, "Erreur serveur", http.StatusInternalServerError)
 		return
 	}
+	json.NewEncoder(w).Encode(topics)
+}
 
-	// 7. Envoi de la liste en JSON
-	json.NewEncoder(w).Encode(listeTopics)
+// CreateTopicHandler insère un nouveau sujet
+func (c *TopicController) CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var body struct {
+		Title    string `json:"title"`
+		Body     string `json:"body"`
+		AuthorID int    `json:"author_id"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
+		return
+	}
+	id, err := c.Model.Create(body.Title, body.Body, body.AuthorID)
+	if err != nil {
+		http.Error(w, "Erreur lors de la création", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]int64{"id": id})
+}
+
+// UpdateTopicHandler modifie un sujet existant
+func (c *TopicController) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.Error(w, "ID invalide", http.StatusBadRequest)
+		return
+	}
+	var body struct {
+		Title  string `json:"title"`
+		Body   string `json:"body"`
+		Status string `json:"status"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
+		return
+	}
+	if err := c.Model.Update(id, body.Title, body.Body, body.Status); err != nil {
+		http.Error(w, "Erreur de mise à jour", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// DeleteTopicHandler supprime un sujet
+func (c *TopicController) DeleteTopicHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.Error(w, "ID invalide", http.StatusBadRequest)
+		return
+	}
+	if err := c.Model.Delete(id); err != nil {
+		http.Error(w, "Erreur de suppression", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }
