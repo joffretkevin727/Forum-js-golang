@@ -13,8 +13,8 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public/login.html'));
 });
 
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Public/register.html'));
+app.get('/newTopic', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Public/create_topic.html'));
 });
 
 app.get('/profil', (req, res) => {
