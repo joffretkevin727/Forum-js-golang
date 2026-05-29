@@ -2,18 +2,36 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/router"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv" // Single line comment: imported for loading .env variables
 )
 
 func main() {
-	// ============================================================
-	// CONNEXION À LA BASE DE DONNÉES
-	// ============================================================
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/forum_db?parseTime=true")
+	// Charge le fichier .env
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Erreur lors du chargement du fichier .env")
+	}
+
+	// Récupère les variables d'environnement
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+	apiPort := os.Getenv("PORT")
+
+	// Construit la chaîne de connexion dynamiquement
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbName)
+
+	// Connexion à la base de données
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("Erreur de configuration DB:", err)
 	}
@@ -24,20 +42,11 @@ func main() {
 		log.Fatal("Impossible de joindre la base de données:", err)
 	}
 
-	// ============================================================
-	// INITIALISATION DU ROUTEUR ET MIDDLEWARES
-	// ============================================================
 	apiRouter := router.New(db)
-
-	// Applique le middleware CORS global autour de ton routeur
 	routerAvecCORS := router.EnableCORS(apiRouter)
 
-	// ============================================================
-	// LANCEMENT DU SERVEUR HTTP
-	// ============================================================
-	log.Println("Serveur démarré sur http://localhost:6767")
-	// Utilise bien routerAvecCORS au lieu de apiRouter
-	err = http.ListenAndServe(":6767", routerAvecCORS)
+	log.Printf("Serveur démarré sur http://localhost:%s", apiPort)
+	err = http.ListenAndServe(":"+apiPort, routerAvecCORS)
 	if err != nil {
 		log.Fatal("Erreur lors du lancement du serveur:", err)
 	}
