@@ -38,44 +38,42 @@
 
                 <div class="forms-slider">
 
-                    <!-- Formulaire de Connexion -->
-                    <div class="box active" id="signInForm">
+                    <form class="box active" id="signInForm">
                         <p class="welcome">Welcome Back</p>
                         <p class="context">Please enter your details to access your artisanal account.</p>
 
                         <p class="email">Email or Username</p>
-                        <input type="email" placeholder="Email">
+                        <input type="text" id="signInIdentifier" placeholder="Email or Username" required>
 
                         <div class="split-password">
                             <p>Password</p>
                             <p>Forgot Password?</p>
                         </div>
-                        <input type="password" placeholder="Mot de passe">
+                        <input type="password" id="signInPassword" placeholder="Mot de passe" required>
 
                         <div class="remember-container">
                             <input type="checkbox" id="remember-checkbox">
                             <label for="remember-checkbox" id="remember-me">Remember me for 30 days</label>
                         </div>
 
-                        <div class="sign-in-btn">Sign In</div>
-                    </div>
+                        <button type="submit" class="sign-in-btn">Sign In</button>
+                    </form>
 
-                    <!-- Formulaire d'Inscription -->
-                    <div class="box" id="signUpForm">
+                    <form class="box" id="signUpForm">
                         <p class="welcome">Create your account</p>
                         <p class="context">Join our community and share your baking passion.</p>
 
                         <p class="email">Email</p>
-                        <input type="email" placeholder="Email">
+                        <input type="email" id="signUpEmail" placeholder="Email" required>
 
                         <p class="email">Username</p>
-                        <input type="text" placeholder="Username">
+                        <input type="text" id="signUpUsername" placeholder="Username" required>
 
                         <p class="email">Password</p>
-                        <input type="password" placeholder="Password">
+                        <input type="password" id="signUpPassword" placeholder="Password" required>
 
-                        <div class="sign-in-btn">Register</div>
-                    </div>
+                        <button type="submit" class="sign-in-btn">Register</button>
+                    </form>
 
                 </div>
             </div>

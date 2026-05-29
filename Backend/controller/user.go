@@ -74,15 +74,24 @@ func (c *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 func (c *UserController) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var body struct {
-		Username     string `json:"username"`
-		Email        string `json:"email"`
-		PasswordHash string `json:"password"`
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"` // Reçoit le mot de passe en brut envoyé par le JS
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
 		return
 	}
-	id, err := c.Model.Create(body.Username, body.Email, body.PasswordHash)
+
+	// Hachage du mot de passe brut reçu du frontend
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Erreur lors du chiffrement du mot de passe", http.StatusInternalServerError)
+		return
+	}
+
+	// On envoie le mot de passe haché (hashedPassword) au modèle SQL
+	id, err := c.Model.Create(body.Username, body.Email, string(hashedPassword))
 	if err != nil {
 		http.Error(w, "Erreur lors de la création", http.StatusInternalServerError)
 		return
