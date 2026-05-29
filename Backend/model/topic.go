@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"encoding/json"
 	structure "forum/structure"
 )
 
@@ -9,10 +10,10 @@ type TopicModel struct {
 	DB *sql.DB
 }
 
-// GetByID récupère un seul sujet par son identifiant unique
 func (modele *TopicModel) GetByID(id int) (*structure.Topic, error) {
 	var topic structure.Topic
-	query := `SELECT id, title, body, status, author_id, created_at FROM topics WHERE id = ?`
+	var tagsRaw []byte
+	query := "SELECT id, title, body, status, author_id, created_at, pseudo, tags, like_count, dislike_count, isLike FROM topics WHERE id = ?"
 	err := modele.DB.QueryRow(query, id).Scan(
 		&topic.ID,
 		&topic.Title,
@@ -20,25 +21,33 @@ func (modele *TopicModel) GetByID(id int) (*structure.Topic, error) {
 		&topic.Status,
 		&topic.AuthorID,
 		&topic.CreatedAt,
+		&topic.Pseudo,
+		&tagsRaw,
+		&topic.LikeCount,
+		&topic.DislikeCount,
+		&topic.IsLike,
 	)
 	if err != nil {
 		return nil, err
 	}
+	if tagsRaw != nil {
+		json.Unmarshal(tagsRaw, &topic.Tags)
+	}
 	return &topic, nil
 }
 
-// GetMany récupère un groupe de topics en utilisant LIMIT et OFFSET pour la pagination
 func (modele *TopicModel) GetMany(limite int, offset int) ([]structure.Topic, error) {
-	requete := `SELECT id, title, body, status, author_id, created_at FROM topics LIMIT ? OFFSET ?`
+	requete := "SELECT id, title, body, status, author_id, created_at, pseudo, tags, like_count, dislike_count, isLike FROM topics LIMIT ? OFFSET ?"
 	lignes, err := modele.DB.Query(requete, limite, offset)
 	if err != nil {
 		return nil, err
 	}
-	defer lignes.Close() // Libère la connexion MAMP une fois la fonction terminée
+	defer lignes.Close()
 
 	listeTopics := []structure.Topic{}
 	for lignes.Next() {
 		var topic structure.Topic
+		var tagsRaw []byte
 		err := lignes.Scan(
 			&topic.ID,
 			&topic.Title,
@@ -46,43 +55,47 @@ func (modele *TopicModel) GetMany(limite int, offset int) ([]structure.Topic, er
 			&topic.Status,
 			&topic.AuthorID,
 			&topic.CreatedAt,
+			&topic.Pseudo,
+			&tagsRaw,
+			&topic.LikeCount,
+			&topic.DislikeCount,
+			&topic.IsLike,
 		)
 		if err != nil {
 			return nil, err
+		}
+		if tagsRaw != nil {
+			json.Unmarshal(tagsRaw, &topic.Tags)
 		}
 		listeTopics = append(listeTopics, topic)
 	}
 	return listeTopics, nil
 }
 
-// Create insère un nouveau sujet dans la base de données
 func (modele *TopicModel) Create(title string, body string, authorID int) (int64, error) {
-	query := `INSERT INTO topics (title, body, status, author_id) VALUES (?, ?, 'open', ?)`
+	query := "INSERT INTO topics (title, body, status, author_id) VALUES (?, ?, 'open', ?)"
 	result, err := modele.DB.Exec(query, title, body, authorID)
 	if err != nil {
 		return 0, err
 	}
-	return result.LastInsertId() // Retourne l'identifiant du topic créé
+	return result.LastInsertId()
 }
 
-// Update modifie le titre, le contenu et le statut d'un sujet existant
 func (modele *TopicModel) Update(id int, title string, body string, status string) error {
-	query := `UPDATE topics SET title = ?, body = ?, status = ? WHERE id = ?`
+	query := "UPDATE topics SET title = ?, body = ?, status = ? WHERE id = ?"
 	_, err := modele.DB.Exec(query, title, body, status, id)
-	return err // Retourne directement l'erreur si elle existe
+	return err
 }
 
-// Delete supprime définitivement un sujet de la base de données
 func (modele *TopicModel) Delete(id int) error {
-	query := `DELETE FROM topics WHERE id = ?`
+	query := "DELETE FROM topics WHERE id = ?"
 	_, err := modele.DB.Exec(query, id)
-	return err // Retourne directement l'erreur si elle existe
+	return err
 }
 
-// Count récupère le nombre total de topics (indispensable pour calculer les pages)
 func (modele *TopicModel) Count() (int, error) {
 	var total int
-	query := `SELECT COUNT(id) FROM topics`
+	query := "SELECT COUNT(id) FROM topics"
 	err := modele.DB.QueryRow(query).Scan(&total)
 	if err != nil {
 		return 0, err
@@ -90,23 +103,38 @@ func (modele *TopicModel) Count() (int, error) {
 	return total, nil
 }
 
-// GetByAuthor récupère la liste complète des sujets créés par un utilisateur spécifique
 func (modele *TopicModel) GetByAuthor(authorID int) ([]structure.Topic, error) {
-	query := `SELECT id, title, body, status, author_id, created_at FROM topics WHERE author_id = ?`
+	query := "SELECT id, title, body, status, author_id, created_at, pseudo, tags, like_count, dislike_count, isLike FROM topics WHERE author_id = ?"
 	rows, err := modele.DB.Query(query, authorID)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close() // Libère la connexion après traitement
+	defer rows.Close()
 
 	var topics []structure.Topic
 	for rows.Next() {
-		var t structure.Topic
-		err := rows.Scan(&t.ID, &t.Title, &t.Body, &t.Status, &t.AuthorID, &t.CreatedAt)
+		var topic structure.Topic
+		var tagsRaw []byte
+		err := rows.Scan(
+			&topic.ID,
+			&topic.Title,
+			&topic.Body,
+			&topic.Status,
+			&topic.AuthorID,
+			&topic.CreatedAt,
+			&topic.Pseudo,
+			&tagsRaw,
+			&topic.LikeCount,
+			&topic.DislikeCount,
+			&topic.IsLike,
+		)
 		if err != nil {
 			return nil, err
 		}
-		topics = append(topics, t)
+		if tagsRaw != nil {
+			json.Unmarshal(tagsRaw, &topic.Tags)
+		}
+		topics = append(topics, topic)
 	}
 	return topics, nil
 }

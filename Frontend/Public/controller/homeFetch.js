@@ -30,22 +30,6 @@ function setupPagination(totalItems) {
 
 setupPagination(25);
 
-fetch('http://localhost:6767/topics')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Erreur serveur Go : ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Topics reçus de Go :", data);
-
-        renderCards(data);
-    })
-    .catch(error => {
-        console.error("Impossible de joindre le serveur Go :", error);
-    });
-
 const fakeData = [
     {
         pseudo: "Jean sebastien",
@@ -67,19 +51,48 @@ const fakeData = [
     }
 ];
 
+fetch('http://localhost:6767/topics')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur serveur Go : ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Topics reçus de Go :", data);
+        renderCards(data);
+    })
+    .catch(error => {
+        console.error("Impossible de joindre le serveur Go :", error);
+        document.getElementById('cards-container').innerHTML = `<p class="error">Impossible de charger les sujets.</p>`;
+    });
+
 function renderCards(discussions) {
     const container = document.getElementById('cards-container');
     container.innerHTML = "";
 
+    if (!discussions || discussions.length === 0) {
+        container.innerHTML = "<p>Aucun sujet pour le moment.</p>";
+        return;
+    }
+
     discussions.forEach(item => {
-        const tagsHTML = item.tags.map(tag => `<p class="tag">${tag}</p>`).join('');
+        const tagsArray = item.tags || [];
+        const tagsHTML = tagsArray.map(tag => `<p class="tag">${tag}</p>`).join('');
+
+        const dateFormatee = new Date(item.created_at).toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
 
         const cardHTML = `
             <div class="card">
                 <div class="header-card">
                     <div class="post-infos">
-                        <p class="pseudo">${item.pseudo}</p>
-                        <p class="post-date">${item.date}</p>
+                        <p class="pseudo">${item.pseudo || 'Anonyme'}</p>
+                        <p class="post-date">${dateFormatee}</p>
                     </div>
                     <div class="tags">
                         ${tagsHTML}
@@ -91,7 +104,7 @@ function renderCards(discussions) {
                 </div>
 
                 <div class="topic-text">
-                    <p>${item.text}</p>
+                    <p>${item.body}</p> 
                 </div>
 
                 <div class="line"></div>
@@ -101,12 +114,12 @@ function renderCards(discussions) {
                         <div class="up-vote">
                             <img src="assets/icons/upvote.svg" alt="Upvote Icon" class="icon-recipes">
                         </div>
-                        <p>${item.upVotes}</p>
+                        <p>${item.like_count}</p>
                         <div class="width-spacer"></div>
                         <div class="down-vote">
                             <img src="assets/icons/downvote.svg" alt="Downvote Icon" class="icon-recipes">
                         </div>
-                        <p>${item.downVotes}</p>
+                        <p>${item.dislike_count}</p>
                     </div>
                     <div class="down-vote">
                         <p>Join Discussion</p>
@@ -119,5 +132,3 @@ function renderCards(discussions) {
         container.innerHTML += cardHTML;
     });
 }
-
-renderCards(fakeData);

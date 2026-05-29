@@ -45,6 +45,11 @@ CREATE TABLE topics (
     status     ENUM('open', 'closed', 'archived') NOT NULL DEFAULT 'open',
     author_id  INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    pseudo     VARCHAR(50) NOT NULL DEFAULT 'Anonyme',
+    tags       JSON NULL,
+    like_count INT NOT NULL DEFAULT 0,
+    dislike_count INT NOT NULL DEFAULT 0,
+    isLike BOOLEAN DEFAULT FALSE,
 
     FOREIGN KEY (author_id)
         REFERENCES users(id)
