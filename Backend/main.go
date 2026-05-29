@@ -13,7 +13,7 @@ func main() {
 	// ============================================================
 	// CONNEXION À LA BASE DE DONNÉES
 	// ============================================================
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/forum_db?parseTime=true")
+	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/forum_db?parseTime=true&charset=utf8mb4")
 	if err != nil {
 		log.Fatal("Erreur de configuration DB:", err)
 	}

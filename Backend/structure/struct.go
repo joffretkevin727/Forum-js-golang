@@ -18,12 +18,17 @@ type Tag struct {
 }
 
 type Topic struct {
-	ID        int       `json:"id"`
-	Title     string    `json:"title"`
-	Body      string    `json:"body"`
-	Status    string    `json:"status"`
-	AuthorID  int       `json:"author_id"`
-	CreatedAt time.Time `json:"created_at"`
+	ID           int      `json:"id"`
+	Title        string   `json:"title"`
+	Body         string   `json:"text"`
+	Status       string   `json:"status"`
+	AuthorID     int      `json:"author_id"`
+	CreatedAt    string   `json:"date"`
+	Pseudo       string   `json:"pseudo"`
+	Tags         []string `json:"tags"`
+	LikeCount    int      `json:"upVotes"`
+	DislikeCount int      `json:"downVotes"`
+	IsLike       bool     `json:"isLike"`
 }
 
 type TopicTag struct {
