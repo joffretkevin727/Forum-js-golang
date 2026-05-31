@@ -45,7 +45,14 @@ func main() {
 	apiRouter := router.New(db)
 	routerAvecCORS := router.EnableCORS(apiRouter)
 
+	log.Printf("=====================================================================================================================")
+	log.Printf("base de donnée accessible ici: http://localhost/phpMyAdmin5/index.php?route=/database/structure&server=1&db=forum_db ")
+	log.Printf("=====================================================================================================================")
+	log.Printf("")
+	log.Printf("")
+	log.Printf("==================================================")
 	log.Printf("Serveur démarré sur http://localhost:%s", apiPort)
+	log.Printf("==================================================")
 	err = http.ListenAndServe(":"+apiPort, routerAvecCORS)
 	if err != nil {
 		log.Fatal("Erreur lors du lancement du serveur:", err)

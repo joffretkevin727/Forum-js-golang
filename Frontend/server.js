@@ -20,5 +20,8 @@ app.get('/newTopic', (req, res) => {
 app.get('/profil', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public/profil.html'));
 });
-
-app.listen(6969, () => console.log("Serveur : http://localhost:6969/home"));
+app.listen(6969, () => {
+    console.log("==================================================");
+    console.log("Application démarrée : http://localhost:6969/home");
+    console.log("==================================================");
+});
