@@ -6,3 +6,6 @@
 
 # Node.js dependencies
 node_modules/
+
+# JetBrain folders
+.idea
