@@ -17,6 +17,10 @@ app.get('/newTopic', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public/create_topic.html'));
 });
 
+app.get('/topic/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Public/topic.html'));
+});
+
 app.get('/profil', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public/profil.html'));
 });

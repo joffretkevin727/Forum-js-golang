@@ -45,24 +45,26 @@ func (c *TopicController) GetTopicsHandler(w http.ResponseWriter, r *http.Reques
 }
 
 // CreateTopicHandler insère un nouveau sujet
+// Single line comment: Decodes JSON payload including tags and returns the new auto-incremented ID.
 func (c *TopicController) CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var body struct {
-		Title    string `json:"title"`
-		Body     string `json:"body"`
-		AuthorID int    `json:"author_id"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
-		return
-	}
-	id, err := c.Model.Create(body.Title, body.Body, body.AuthorID)
-	if err != nil {
-		http.Error(w, "Erreur lors de la création", http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]int64{"id": id})
+    w.Header().Set("Content-Type", "application/json")
+    var body struct {
+       Title    string   `json:"title"`
+       Body     string   `json:"body"`
+       AuthorID int      `json:"author_id"`
+       Tags     []string `json:"tags"`
+    }
+    if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+       http.Error(w, "Format JSON invalide", http.StatusBadRequest)
+       return
+    }
+    id, err := c.Model.Create(body.Title, body.Body, body.AuthorID, body.Tags)
+    if err != nil {
+       http.Error(w, "Erreur lors de la création", http.StatusInternalServerError)
+       return
+    }
+    w.WriteHeader(http.StatusCreated)
+    json.NewEncoder(w).Encode(map[string]int64{"id": id})
 }
 
 // UpdateTopicHandler modifie un sujet existant

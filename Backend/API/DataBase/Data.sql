@@ -1,44 +1,67 @@
 -- ============================================================
--- JEU DE DONNÉES DE TEST (INSERTS)
+-- JEU DE DONNÉES DE TEST COHÉRENT
 -- ============================================================
 
--- 1. Insertion des utilisateurs (Les mots de passe fictifs devront correspondre à tes tests en Go)
-INSERT INTO users (username, email, password_hash, role, is_banned) VALUES
-('lucas', 'lucas@exemple.com', '$2a$10$Zm9ydW1nb2xhbmd0ZXN0cGFzc3dk', 'admin', 0),
-('alice', 'alice@exemple.com', '$2a$10$Zm9ydW1nb2xhbmd0ZXN0cGFzc3dk', 'user', 0),
-('bob_le_modo', 'bob@exemple.com', '$2a$10$Zm9ydW1nb2xhbmd0ZXN0cGFzc3dk', 'modo', 0),
-('troll42', 'troll@exemple.com', '$2a$10$Zm9ydW1nb2xhbmd0ZXN0cGFzc3dk', 'user', 1); -- Utilisateur banni
+-- Tous les utilisateurs ci-dessous ont pour mot de passe : Password123!
+INSERT INTO users (id, username, email, password_hash, is_banned)
+VALUES (1, 'JeanSebastien', 'jean.seb@example.com', '$2a$10$wK9SBlVl7kR/y8W6n8fO/.wzCg7Fq6mEovqfbeX9LOnH4U2GepT7O', 0),
+       (2, 'MarieCroissant', 'marie.c@example.com', '$2a$10$wK9SBlVl7kR/y8W6n8fO/.wzCg7Fq6mEovqfbeX9LOnH4U2GepT7O', 0),
+       (3, 'PierreBoulanger', 'pierre.b@example.com', '$2a$10$wK9SBlVl7kR/y8W6n8fO/.wzCg7Fq6mEovqfbeX9LOnH4U2GepT7O',
+        0),
+       (4, 'TrollDuFour', 'troll.four@example.com', '$2a$10$wK9SBlVl7kR/y8W6n8fO/.wzCg7Fq6mEovqfbeX9LOnH4U2GepT7O', 1);
+-- Utilisateur banni
 
--- 2. Insertion des tags
-INSERT INTO tags (name) VALUES
-('Golang'),
-('MySQL'),
-('MAMP'),
-('Aide'),
-('Discussions');
+-- Insertion des tags correspondants aux filtres de ton projet
+INSERT INTO tags (id, name)
+VALUES (1, 'Croissant'),
+       (2, 'Cannelés'),
+       (3, 'Gâteau Basque'),
+       (4, 'Levain'),
+       (5, 'Astuce');
 
--- 3. Insertion des sujets (Topics)
-INSERT INTO topics (title, body, status, author_id) VALUES
-('Bienvenue sur le forum !', 'Ceci est le tout premier sujet pour saluer la communauté.', 'open', 1), -- Créé par lucas
-('Problème de connexion MAMP et Go', 'Bonjour, mon API Go ne trouve pas MySQL sur le port 8889. Une idée ?', 'open', 2), -- Créé par alice
-('Règles de modération', 'Merci de rester courtois sur ce forum de discussion.', 'archived', 3); -- Créé par bob_le_modo
+-- Insertion des sujets de discussion (Topics)
+INSERT INTO topics (id, title, body, status, author_id, pseudo, tags, like_count, dislike_count)
+VALUES (1, 'Le secret du véritable Gâteau Basque',
+        'Bonjour à tous ! Quelqu''un aurait la vraie recette traditionnelle du gâteau basque ? Notamment le secret pour que la crème pâtissière reste bien ferme après la cuisson au four.',
+        'open', 1, 'JeanSebastien', '["Gâteau Basque", "Astuce"]', 2, 0),
+       (2, 'Mon levain chef ne bulle plus, au secours !',
+        'J''ai commencé un levain naturel il y a 4 jours. Il bullait bien au début mais depuis ce matin plus rien, une fine couche de liquide s''est formée sur le dessus. Est-il mort ?',
+        'open', 2, 'MarieCroissant', '["Levain"]', 1, 1),
+       (3, 'Réussir le feuilletage des croissants à coup sûr',
+        'Après de nombreux essais ratés, j''ai enfin compris que la température du beurre de tournage doit être exactement la même que celle de la détrempe (environ 15°C). Voici mon guide complet...',
+        'open', 3, 'PierreBoulanger', '["Croissant", "Astuce"]', 1, 0);
 
--- 4. Liaison des tags aux sujets (Topic_Tags)
-INSERT INTO topic_tags (topic_id, tag_id) VALUES
-(1, 5), -- Sujet 1 a le tag 'Discussions'
-(2, 1), -- Sujet 2 a le tag 'Golang'
-(2, 2), -- Sujet 2 a le tag 'MySQL'
-(2, 3), -- Sujet 2 a le tag 'MAMP'
-(2, 4), -- Sujet 2 a le tag 'Aide'
-(3, 5); -- Sujet 3 a le tag 'Discussions'
+-- Association dans la table de liaison topic_tags
+INSERT INTO topic_tags (topic_id, tag_id)
+VALUES (1, 3), -- Topic 1 a le Tag 3 (Gâteau Basque)
+       (1, 5), -- Topic 1 a le Tag 5 (Astuce)
+       (2, 4), -- Topic 2 a le Tag 4 (Levain)
+       (3, 1), -- Topic 3 a le Tag 1 (Croissant)
+       (3, 5);
+-- Topic 3 a le Tag 5 (Astuce)
 
--- 5. Insertion des messages (Réponses)
-INSERT INTO messages (body, topic_id, author_id) VALUES
-('Super ! Content de voir ce projet démarrer.', 1, 2), -- Alice répond sur le Sujet 1
-('Regarde si ton MAMP n''utilise pas plutôt le port 3306 dans les préférences.', 2, 1), -- Lucas répond sur le Sujet 2
-('Ah merci Lucas ! C''était exactement ça, ça marche.', 2, 2); -- Alice répond sur le Sujet 2
+-- Insertion des commentaires (Comments)
+INSERT INTO comments (id, body, topic_id, author_id)
+VALUES (1,
+        'Il faut ajouter un peu de rhum ambré dans ta crème et surtout la laisser reposer une nuit entière au réfrigérateur avant de monter le gâteau !',
+        1, 3),
+       (2,
+        'Le liquide au-dessus s''appelle du "hootch". C''est juste que ton levain a faim ! Enlève le liquide et nourris-le à nouveau avec de la farine de seigle.',
+        2, 3),
+       (3, 'N''importe quoi, le levain est mort, jette-le et achète de la levure chimique !', 2, 1),
+       (4, 'Merci pour l''astuce des températures, mes croissants n''ont plus rien à voir !', 3, 2);
 
--- 6. Insertion des votes sur les messages (Message_Votes)
-INSERT INTO message_votes (user_id, message_id, vote) VALUES
-(2, 2, 1),  -- Alice met un +1 au message de Lucas (id: 2)
-(3, 2, 1);  -- Bob met aussi un +1 au message de Lucas (id: 2)
+-- Simulation des likes et dislikes sur les topics
+INSERT INTO liketopic (userid, topicid, `like`)
+VALUES (2, 1, 1),  -- Marie aime le topic 1
+       (3, 1, 1),  -- Pierre aime le topic 1
+       (1, 2, -1), -- Jean met un dislike au topic 2
+       (3, 2, 1),  -- Pierre met un like au topic 2
+       (2, 3, 1);
+-- Marie met un like au topic 3
+
+-- Simulation des likes et dislikes sur les commentaires
+INSERT INTO likecomment (userid, commentid, topicid, `like`)
+VALUES (1, 1, 1, 1), -- Jean aime le commentaire de Pierre sur son topic
+       (2, 2, 2, 1), -- Marie aime les conseils de Pierre sur le levain
+       (3, 3, 2, -1); -- Pierre n''aime pas la fausse information de Jean

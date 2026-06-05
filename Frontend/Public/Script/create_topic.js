@@ -1,74 +1,58 @@
+// Single line comment: Manages tags behavior and enforces user authentication check before submitting the payload.
 document.addEventListener("DOMContentLoaded", () => {
     const tagInput = document.getElementById("tag-input");
     const tagsContainer = document.getElementById("tags-container");
     const tagsHiddenInput = document.getElementById("tags-hidden-input");
     const datalist = document.getElementById("default-tags");
+    const form = document.querySelector(".topic-creation");
 
-    // Récupérer la liste des tags par défaut à partir du datalist
     const defaultTags = Array.from(datalist.options).map(opt => opt.value.toLowerCase());
-    
-    // Tableau pour stocker les tags sélectionnés (ex: [{name: "HTML", type: "default"}] )
     let selectedTags = [];
 
-    // Fonction pour mettre à jour l'affichage et l'input caché
     function updateTags() {
         tagsContainer.innerHTML = "";
         selectedTags.forEach((tag, index) => {
             const tagSpan = document.createElement("span");
             tagSpan.classList.add("tag");
-            
-            // Applique la classe bleu ou vert selon l'origine du tag
             if (tag.type === "default") {
                 tagSpan.classList.add("default-tag");
             } else {
                 tagSpan.classList.add("created-tag");
             }
-            
             tagSpan.innerHTML = `${tag.name} <span class="tag-remove" data-index="${index}">&times;</span>`;
             tagsContainer.appendChild(tagSpan);
         });
-
-        // Met à jour l'input caché sous forme de chaîne de caractères (ex: "HTML,CSS,MonNouveauTag")
-        tagsHiddenInput.value = selectedTags.map(t => t.name).join(",");
+        tagsHiddenInput.value = JSON.stringify(selectedTags.map(t => t.name));
     }
 
-    // Fonction pour ajouter un tag
     function addTag(value) {
         const cleanValue = value.trim();
         if (cleanValue === "") return;
-
-        // Éviter les doublons
         if (selectedTags.some(t => t.name.toLowerCase() === cleanValue.toLowerCase())) {
             tagInput.value = "";
             return;
         }
-
-        // Vérifier si le tag existe par défaut ou s'il est créé
         const isDefault = defaultTags.includes(cleanValue.toLowerCase());
         const tagType = isDefault ? "default" : "created";
-
         selectedTags.push({ name: cleanValue, type: tagType });
         updateTags();
-        tagInput.value = ""; // Vide le champ
+        tagInput.value = "";
     }
 
-    // Détecter la touche Entrée ou la sélection dans la liste
     tagInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
-            e.preventDefault(); // Empêche de soumettre le formulaire entier
+            e.preventDefault();
             addTag(tagInput.value);
         }
     });
 
     tagInput.addEventListener("input", () => {
-        // Si l'utilisateur clique sur une option du datalist, l'ajout est instantané
         const options = Array.from(datalist.options).map(opt => opt.value);
         if (options.includes(tagInput.value)) {
             addTag(tagInput.value);
         }
     });
 
-    // Supprimer un tag lors du clic sur le "x"
     tagsContainer.addEventListener("click", (e) => {
         if (e.target.classList.contains("tag-remove")) {
             const index = e.target.getAttribute("data-index");
@@ -76,4 +60,56 @@ document.addEventListener("DOMContentLoaded", () => {
             updateTags();
         }
     });
+
+    // --- SOUBOUMISSION ET VÉRIFICATION DE CONNEXION ---
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Vérifie si l'ID utilisateur généré au login est présent
+            const currentUserId = localStorage.getItem("userId");
+            if (!currentUserId) {
+                alert("Vous n'êtes pas connecté ! Vous devez avoir un compte et être identifié pour créer un sujet.");
+                window.location.href = "http://localhost:6969/login";
+                return;
+            }
+
+            const formData = new FormData(form);
+            const payload = {
+                title: formData.get("titre"),
+                body: formData.get("corps"),
+                tags: JSON.parse(tagsHiddenInput.value || "[]")
+            };
+
+            try {
+                // Adaptez l'URL vers votre API Go (port 6767)
+                const response = await fetch("http://localhost:6767/topics", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-User-ID": currentUserId
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.status === 401) {
+                    alert("Session invalide ou expirée. Veuillez vous reconnecter.");
+                    localStorage.removeItem("userId");
+                    window.location.href = "http://localhost:6969/login";
+                    return;
+                }
+
+                if (!response.ok) throw new Error("Erreur API Go");
+                const data = await response.json();
+
+                if (data && data.id) {
+                    // Redirection finale vers votre serveur Express
+                    window.location.href = `http://localhost:6969/topic/${data.id}`;
+                }
+            } catch (error) {
+                console.error("Erreur:", error);
+                alert("Impossible de créer le sujet.");
+            }
+        });
+    }
 });

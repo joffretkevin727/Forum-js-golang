@@ -72,13 +72,19 @@ func (modele *TopicModel) GetMany(limite int, offset int) ([]structure.Topic, er
 	return listeTopics, nil
 }
 
-func (modele *TopicModel) Create(title string, body string, authorID int) (int64, error) {
-	query := "INSERT INTO topics (title, body, status, author_id) VALUES (?, ?, 'open', ?)"
-	result, err := modele.DB.Exec(query, title, body, authorID)
-	if err != nil {
-		return 0, err
-	}
-	return result.LastInsertId()
+// Single line comment: Marshals tags to JSON and inserts topic into MySQL.
+func (modele *TopicModel) Create(title string, body string, authorID int, tags []string) (int64, error) {
+    tagsJSON, err := json.Marshal(tags)
+    if err != nil {
+        return 0, err
+    }
+
+    query := "INSERT INTO topics (title, body, status, author_id, tags) VALUES (?, ?, 'open', ?, ?)"
+    result, err := modele.DB.Exec(query, title, body, authorID, tagsJSON)
+    if err != nil {
+        return 0, err
+    }
+    return result.LastInsertId()
 }
 
 func (modele *TopicModel) Update(id int, title string, body string, status string) error {

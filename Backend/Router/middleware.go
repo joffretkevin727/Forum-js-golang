@@ -1,6 +1,10 @@
 package router
 
-import "net/http"
+import (
+        "net/http"
+        "strconv"
+        "context"
+        )
 
 // EnableCORS ajoute les entêtes nécessaires pour autoriser le Front à requêter l'API
 func EnableCORS(next http.Handler) http.Handler {
@@ -20,14 +24,26 @@ func EnableCORS(next http.Handler) http.Handler {
 }
 
 // AuthRequired vérifie si la requête contient un identifiant utilisateur valide
+// Single line comment: Denies access with an explicit JSON message if the X-User-ID header is missing.
 func AuthRequired(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// Vérification simple via un Header (adaptable plus tard avec un Token)
-		userID := r.Header.Get("X-User-ID")
-		if userID == "" {
-			http.Error(w, `{"message":"Accès refusé : vous devez être connecté"}`, http.StatusUnauthorized)
-			return
-		}
-		next.ServeHTTP(w, r)
-	}
+    return func(w http.ResponseWriter, r *http.Request) {
+       userIDStr := r.Header.Get("X-User-ID")
+       if userIDStr == "" {
+          w.Header().Set("Content-Type", "application/json")
+          w.WriteHeader(http.StatusUnauthorized)
+          w.Write([]byte(`{"message":"Accès refusé : vous devez être connecté avec un compte valide pour créer un sujet"}`))
+          return
+       }
+
+       userID, err := strconv.Atoi(userIDStr)
+       if err != nil {
+          w.Header().Set("Content-Type", "application/json")
+          w.WriteHeader(http.StatusBadRequest)
+          w.Write([]byte(`{"message":"ID utilisateur invalide"}`))
+          return
+       }
+
+       ctx := context.WithValue(r.Context(), "userID", userID)
+       next.ServeHTTP(w, r.WithContext(ctx))
+    }
 }

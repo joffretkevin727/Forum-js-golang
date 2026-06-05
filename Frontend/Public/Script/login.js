@@ -35,12 +35,10 @@ function initFormSubmissions() {
     if (signInForm) {
         signInForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // Récupère l'identifiant (email) et le mot de passe
             const email = document.getElementById('signInIdentifier').value;
             const password = document.getElementById('signInPassword').value;
 
             try {
-                // Envoie les données de connexion à l'API Go
                 const response = await fetch(`${API_URL}/users/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -48,10 +46,16 @@ function initFormSubmissions() {
                 });
                 const data = await response.json();
 
+                // Single line comment: Stores user session object and explicit userId key in localStorage upon login.
                 if (response.ok) {
-                    // Stocke l'état de connexion et redirige l'utilisateur
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('user', JSON.stringify(data.user));
+
+                    // L'emplacement correct de l'enregistrement du userId est ICI
+                    if (data.user && data.user.id) {
+                        localStorage.setItem('userId', data.user.id);
+                    }
+
                     alert(`Ravi de vous revoir, ${data.user.username} !`);
                     window.location.href = '/home';
                 } else {
@@ -67,22 +71,20 @@ function initFormSubmissions() {
     if (signUpForm) {
         signUpForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // Récupère les données du nouveau compte
             const email = document.getElementById('signUpEmail').value;
             const username = document.getElementById('signUpUsername').value;
             const password = document.getElementById('signUpPassword').value;
 
             try {
-                // Envoie les données d'inscription à l'API Go
                 const response = await fetch(`${API_URL}/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, email, password })
                 });
 
+                // Single line comment: Handles basic sign up response and toggles to the login tab layout view.
                 if (response.ok) {
                     alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
-                    // Simule un clic sur l'onglet Sign In pour basculer l'affichage automatiquement
                     document.getElementById('tab-signin').click();
                 } else {
                     alert('Erreur lors de la création du compte (Email ou Username déjà pris).');
