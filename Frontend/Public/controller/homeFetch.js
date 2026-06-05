@@ -80,7 +80,7 @@ function renderCards(discussions) {
         const tagsArray = item.tags || [];
         const tagsHTML = tagsArray.map(tag => `<p class="tag">${tag}</p>`).join('');
 
-        const dateFormatee = new Date(item.created_at).toLocaleDateString('fr-FR', {
+        const dateFormatee = new Date(item.date).toLocaleDateString('fr-FR', {
             day: 'numeric',
             month: 'short',
             hour: '2-digit',
@@ -104,7 +104,7 @@ function renderCards(discussions) {
                 </div>
 
                 <div class="topic-text">
-                    <p>${item.body}</p> 
+                    <p>${item.text}</p> 
                 </div>
 
                 <div class="line"></div>
@@ -114,12 +114,12 @@ function renderCards(discussions) {
                         <div class="up-vote">
                             <img src="assets/icons/upvote.svg" alt="Upvote Icon" class="icon-recipes">
                         </div>
-                        <p>${item.like_count}</p>
+                        <p>${item.upVotes}</p>
                         <div class="width-spacer"></div>
                         <div class="down-vote">
                             <img src="assets/icons/downvote.svg" alt="Downvote Icon" class="icon-recipes">
                         </div>
-                        <p>${item.dislike_count}</p>
+                        <p>${item.downVotes}</p>
                     </div>
                     <div class="down-vote">
                         <p>Join Discussion</p>
