@@ -2,97 +2,78 @@ package controller
 
 import (
 	"encoding/json"
+	"forum/model"
 	"net/http"
 	"strconv"
-
-	model "forum/model"
 )
 
 type TopicController struct {
 	Model *model.TopicModel
 }
 
-// GetTopicHandler récupère un sujet par son ID
-func (c *TopicController) GetTopicHandler(w http.ResponseWriter, r *http.Request) {
+// HandleTopicsGET récupère la totalité des sujets bruts stockés dans la base de données.
+func (c *TopicController) HandleTopicsGET(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	id, err := strconv.Atoi(r.PathValue("id"))
+	list, err := c.Model.GetAll()
 	if err != nil {
-		http.Error(w, "ID invalide", http.StatusBadRequest)
+		http.Error(w, "Erreur lors de la récupération", http.StatusInternalServerError)
 		return
 	}
-	topic, err := c.Model.GetByID(id)
-	if err != nil {
-		http.Error(w, "Sujet introuvable", http.StatusNotFound)
-		return
-	}
-	json.NewEncoder(w).Encode(topic)
+	json.NewEncoder(w).Encode(list)
 }
 
-// GetTopicsHandler récupère la liste des sujets avec pagination
-func (c *TopicController) GetTopicsHandler(w http.ResponseWriter, r *http.Request) {
+// HandleTopicsPOST insère un nouveau sujet avec ses tags associés dans la base de données.
+func (c *TopicController) HandleTopicsPOST(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	limite, _ := strconv.Atoi(r.URL.Query().Get("limite"))
-	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-	if limite <= 0 {
-		limite = 10
+	var body struct {
+		Title    string   `json:"title"`
+		Body     string   `json:"text"`
+		Pseudo   string   `json:"pseudo"`
+		AuthorID int      `json:"author_id"`
+		Tags     []string `json:"tags"`
 	}
-	topics, err := c.Model.GetMany(limite, offset)
-	if err != nil {
-		http.Error(w, "Erreur serveur", http.StatusInternalServerError)
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(topics)
+	// Single line comment: calls model create method with parsed parameters.
+	id, err := c.Model.Create(body.Title, body.Body, body.Pseudo, body.AuthorID, body.Tags)
+	if err != nil {
+		http.Error(w, "Erreur lors de la création", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]int64{"id": id})
 }
 
-// CreateTopicHandler insère un nouveau sujet
-// Single line comment: Decodes JSON payload including tags and returns the new auto-incremented ID.
-func (c *TopicController) CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "application/json")
-    var body struct {
-       Title    string   `json:"title"`
-       Body     string   `json:"body"`
-       AuthorID int      `json:"author_id"`
-       Tags     []string `json:"tags"`
-    }
-    if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-       http.Error(w, "Format JSON invalide", http.StatusBadRequest)
-       return
-    }
-    id, err := c.Model.Create(body.Title, body.Body, body.AuthorID, body.Tags)
-    if err != nil {
-       http.Error(w, "Erreur lors de la création", http.StatusInternalServerError)
-       return
-    }
-    w.WriteHeader(http.StatusCreated)
-    json.NewEncoder(w).Encode(map[string]int64{"id": id})
-}
-
-// UpdateTopicHandler modifie un sujet existant
-func (c *TopicController) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.PathValue("id"))
+// HandleTopicsPUT modifie les champs d'un sujet existant ciblé par son identifiant.
+func (c *TopicController) HandleTopicsPUT(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		http.Error(w, "ID invalide", http.StatusBadRequest)
 		return
 	}
 	var body struct {
 		Title  string `json:"title"`
-		Body   string `json:"body"`
+		Body   string `json:"text"`
 		Status string `json:"status"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
 		return
 	}
-	if err := c.Model.Update(id, body.Title, body.Body, body.Status); err != nil {
+	// Single line comment: updates topic fields directly using SQL database exec.
+	_, err = c.Model.DB.Exec("UPDATE topics SET title = ?, body = ?, status = ? WHERE id = ?", body.Title, body.Body, body.Status, id)
+	if err != nil {
 		http.Error(w, "Erreur de mise à jour", http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// DeleteTopicHandler supprime un sujet
-func (c *TopicController) DeleteTopicHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.PathValue("id"))
+// HandleTopicsDELETE supprime définitivement de la base de données le sujet correspondant à l'identifiant.
+func (c *TopicController) HandleTopicsDELETE(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		http.Error(w, "ID invalide", http.StatusBadRequest)
 		return
@@ -103,3 +84,8 @@ func (c *TopicController) DeleteTopicHandler(w http.ResponseWriter, r *http.Requ
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (c *TopicController) HandleTopicIDGET(w http.ResponseWriter, r *http.Request)    {}
+func (c *TopicController) HandleTopicIDPOST(w http.ResponseWriter, r *http.Request)   {}
+func (c *TopicController) HandleTopicIDPUT(w http.ResponseWriter, r *http.Request)    {}
+func (c *TopicController) HandleTopicIDDELETE(w http.ResponseWriter, r *http.Request) {}

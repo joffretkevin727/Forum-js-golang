@@ -51,7 +51,7 @@ func main() {
 	log.Printf("")
 	log.Printf("")
 	log.Printf("==================================================")
-	log.Printf("Serveur démarré sur http://localhost:%s", apiPort)
+	log.Printf("Serveur démarré sur http://localhost:%s/topics", apiPort)
 	log.Printf("==================================================")
 	err = http.ListenAndServe(":"+apiPort, routerAvecCORS)
 	if err != nil {

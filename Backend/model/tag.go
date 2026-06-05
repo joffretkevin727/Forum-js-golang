@@ -2,34 +2,20 @@ package model
 
 import (
 	"database/sql"
-	structure "forum/structure"
+	"forum/structure"
 )
 
-// ============================================================
-// TAG MODEL
-// ============================================================
 type TagModel struct {
 	DB *sql.DB
 }
 
-// Create insère un nouveau tag unique
-func (m *TagModel) Create(name string) (int64, error) {
-	query := `INSERT INTO tags (name) VALUES (?)`
-	res, err := m.DB.Exec(query, name)
-	if err != nil {
-		return 0, err
-	}
-	return res.LastInsertId() // Retourne l'ID du tag créé
-}
-
-// GetAll récupère tous les tags disponibles
+// GetAll récupère tous les tags disponibles sur la plateforme
 func (m *TagModel) GetAll() ([]structure.Tag, error) {
-	query := `SELECT id, name FROM tags`
-	rows, err := m.DB.Query(query)
+	rows, err := m.DB.Query(`SELECT id, name FROM tags`)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close() // Libère la connexion après traitement
+	defer rows.Close()
 
 	var tags []structure.Tag
 	for rows.Next() {
@@ -42,31 +28,8 @@ func (m *TagModel) GetAll() ([]structure.Tag, error) {
 	return tags, nil
 }
 
-// AttachToTopic associe un tag à un sujet (remplit topic_tags)
+// AttachToTopic associe un tag à un sujet dans la table de liaison topic_tags
 func (m *TagModel) AttachToTopic(topicID, tagID int) error {
-	query := `INSERT INTO topic_tags (topic_id, tag_id) VALUES (?, ?)`
-	_, err := m.DB.Exec(query, topicID, tagID)
-	return err // Retourne directement l'erreur
-}
-
-// GetByTopic récupère tous les tags liés à un sujet spécifique
-func (m *TagModel) GetByTopic(topicID int) ([]structure.Tag, error) {
-	query := `SELECT t.id, t.name FROM tags t 
-			  JOIN topic_tags tt ON t.id = tt.tag_id 
-			  WHERE tt.topic_id = ?`
-	rows, err := m.DB.Query(query, topicID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close() // Libère la connexion après traitement
-
-	var tags []structure.Tag
-	for rows.Next() {
-		var t structure.Tag
-		if err := rows.Scan(&t.ID, &t.Name); err != nil {
-			return nil, err
-		}
-		tags = append(tags, t)
-	}
-	return tags, nil
+	_, err := m.DB.Exec(`INSERT INTO topic_tags (topic_id, tag_id) VALUES (?, ?)`, topicID, tagID)
+	return err
 }

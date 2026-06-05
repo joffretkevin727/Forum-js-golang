@@ -6,8 +6,7 @@ type User struct {
 	ID           int       `json:"id"`
 	Username     string    `json:"username"`
 	Email        string    `json:"email"`
-	PasswordHash string    `json:"-"`
-	Role         string    `json:"role"`
+	PasswordHash string    `json:"-"` // Masqué dans les réponses JSON pour la sécurité
 	IsBanned     bool      `json:"is_banned"`
 	CreatedAt    time.Time `json:"created_at"`
 }
@@ -36,7 +35,7 @@ type TopicTag struct {
 	TagID   int `json:"tag_id"`
 }
 
-type Message struct {
+type Comment struct {
 	ID        int       `json:"id"`
 	Body      string    `json:"body"`
 	TopicID   int       `json:"topic_id"`
@@ -44,8 +43,17 @@ type Message struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type MessageVote struct {
+type LikeTopic struct {
+	ID      int `json:"id"`
+	UserID  int `json:"user_id"`
+	TopicID int `json:"topic_id"`
+	Like    int `json:"like"`
+}
+
+type LikeComment struct {
+	ID        int `json:"id"`
 	UserID    int `json:"user_id"`
-	MessageID int `json:"message_id"`
-	Vote      int `json:"vote"`
+	CommentID int `json:"comment_id"`
+	TopicID   int `json:"topic_id"`
+	Like      int `json:"like"`
 }

@@ -2,36 +2,15 @@ package controller
 
 import (
 	"encoding/json"
+	"forum/model"
 	"net/http"
-	"strconv"
-
-	model "forum/model"
 )
 
 type TagController struct {
 	Model *model.TagModel
 }
 
-// CreateTagHandler crée un tag unique
-func (c *TagController) CreateTagHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var body struct {
-		Name string `json:"name"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
-		return
-	}
-	id, err := c.Model.Create(body.Name)
-	if err != nil {
-		http.Error(w, "Erreur ou tag déjà existant", http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]int64{"id": id})
-}
-
-// GetAllTagsHandler liste tous les tags
+// GetAllTagsHandler récupère tous les tags disponibles pour alimenter l'autocomplétion du formulaire front-end.
 func (c *TagController) GetAllTagsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	tags, err := c.Model.GetAll()
@@ -42,35 +21,21 @@ func (c *TagController) GetAllTagsHandler(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(tags)
 }
 
-// AttachTagHandler associe un tag existant à un topic
-func (c *TagController) AttachTagHandler(w http.ResponseWriter, r *http.Request) {
+// CreateTagHandler enregistre un nouveau tag unique créé par l'utilisateur en base de données.
+func (c *TagController) CreateTagHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	var body struct {
-		TopicID int `json:"topic_id"`
-		TagID   int `json:"tag_id"`
+		Name string `json:"name"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		http.Error(w, "Format JSON invalide", http.StatusBadRequest)
 		return
 	}
-	if err := c.Model.AttachToTopic(body.TopicID, body.TagID); err != nil {
-		http.Error(w, "Erreur d'association", http.StatusInternalServerError)
+	// Single line comment: executes a direct insert operation into the tags table using DB connection.
+	_, err := c.Model.DB.Exec(`INSERT INTO tags (name) VALUES (?)`, body.Name)
+	if err != nil {
+		http.Error(w, "Erreur ou tag déjà existant", http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
-}
-
-// GetTagsByTopicHandler liste les tags attachés à un sujet
-func (c *TagController) GetTagsByTopicHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	topicID, err := strconv.Atoi(r.PathValue("topic_id"))
-	if err != nil {
-		http.Error(w, "ID de sujet invalide", http.StatusBadRequest)
-		return
-	}
-	tags, err := c.Model.GetByTopic(topicID)
-	if err != nil {
-		http.Error(w, "Erreur serveur", http.StatusInternalServerError)
-		return
-	}
-	json.NewEncoder(w).Encode(tags)
 }
