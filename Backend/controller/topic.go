@@ -28,6 +28,10 @@ func (c *TopicController) GetTopicHandler(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(topic)
 }
 
+func (c *TopicController) Setlike(w http.ResponseWriter, r *http.Request) {
+
+}
+
 // GetTopicsHandler récupère la liste des sujets avec pagination
 func (c *TopicController) GetTopicsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -86,6 +90,24 @@ func (c *TopicController) UpdateTopicHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// SetLikeHandler incrémente le nombre de likes d'un sujet
+func (c *TopicController) SetLikeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.Error(w, "ID invalide", http.StatusBadRequest)
+		return
+	}
+
+	if err := c.Model.SetLike(id); err != nil {
+		http.Error(w, "Erreur lors de l'ajout du like", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Like ajouté avec succès"})
 }
 
 // DeleteTopicHandler supprime un sujet

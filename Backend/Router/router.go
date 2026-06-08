@@ -46,6 +46,7 @@ func New(db *sql.DB) *http.ServeMux {
 	// ============================================================
 	routeur.HandleFunc("GET /topics", topicController.GetTopicsHandler)
 	routeur.HandleFunc("GET /topics/{id}", topicController.GetTopicHandler)
+	routeur.HandleFunc("GET /setlike/{id}", topicController.SetLikeHandler)
 	// Routes protégées par le Auth Middleware
 	routeur.HandleFunc("POST /topics", AuthRequired(topicController.CreateTopicHandler))
 	routeur.HandleFunc("PUT /topics/{id}", AuthRequired(topicController.UpdateTopicHandler))

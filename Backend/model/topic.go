@@ -103,6 +103,12 @@ func (modele *TopicModel) Count() (int, error) {
 	return total, nil
 }
 
+func (modele *TopicModel) SetLike(id int) error {
+	query := "UPDATE topics SET like_count = like_count + 1 WHERE id = ?"
+	_, err := modele.DB.Exec(query, id)
+	return err
+}
+
 func (modele *TopicModel) GetByAuthor(authorID int) ([]structure.Topic, error) {
 	query := "SELECT id, title, body, status, author_id, created_at, pseudo, tags, like_count, dislike_count, isLike FROM topics WHERE author_id = ?"
 	rows, err := modele.DB.Query(query, authorID)
