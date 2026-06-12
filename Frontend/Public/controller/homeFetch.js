@@ -1,4 +1,4 @@
-let currentPage = 1;
+﻿let currentPage = 1;
 const itemsPerPage = 10;
 // /topics
 function setupPagination(totalItems) {
