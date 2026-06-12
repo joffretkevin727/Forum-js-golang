@@ -24,6 +24,9 @@ app.get('/topic/:id', (req, res) => {
 app.get('/profil', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public/profil.html'));
 });
+app.get('/topic_comments', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Public/topic_comments.html'));
+});
 app.listen(6969, () => {
     console.log("==================================================");
     console.log("Application démarrée : http://localhost:6969/home");

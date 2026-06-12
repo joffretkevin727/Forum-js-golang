@@ -1,8 +1,47 @@
 ﻿let currentPage = 1;
 const itemsPerPage = 10;
-// /topics
+let allDiscussions = []; // Stockage global pour gérer la pagination côté front
+
+// Fonction pour récupérer les topics depuis l'API Go
+function fetchTopics() {
+    fetch('http://localhost:6767/topics')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur serveur Go : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Topics reçus de Go :", data);
+            allDiscussions = data || [];
+
+            // On initialise la pagination avec le nombre total d'éléments reçus
+            setupPagination(allDiscussions.length);
+            // On affiche uniquement les éléments de la page courante
+            displayCurrentPage();
+        })
+        .catch(error => {
+            console.error("Impossible de joindre le serveur Go :", error);
+            const container = document.getElementById('cards-container');
+            if (container) {
+                container.innerHTML = `<p class="error">Impossible de charger les sujets.</p>`;
+            }
+        });
+}
+
+// Fonction pour découper le tableau et afficher uniquement la page active
+function displayCurrentPage() {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedItems = allDiscussions.slice(startIndex, endIndex);
+
+    renderCards(paginatedItems);
+}
+
+// Gestion de la pagination graphique
 function setupPagination(totalItems) {
     const container = document.getElementById('page-numbers-container');
+    if (!container) return;
     container.innerHTML = "";
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -18,57 +57,20 @@ function setupPagination(totalItems) {
 
         pageDiv.addEventListener('click', () => {
             currentPage = i;
-
             console.log(`Chargement de la page : ${currentPage}`);
 
-            setupPagination(totalItems);
+            setupPagination(totalItems); // Recalcule le style des boutons
+            displayCurrentPage();        // Change les cartes affichées !
         });
 
         container.appendChild(pageDiv);
     }
 }
 
-setupPagination(25);
-
-const fakeData = [
-    {
-        pseudo: "Jean sebastien",
-        date: "2 hours ago",
-        tags: ["#Croissant", "#Cannelés"],
-        title: "Want to know the secret of the gateau basque recipe ?",
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse, repudiandae, voluptates. Accusamus deserunt dignissimos.",
-        upVotes: 20,
-        downVotes: 25
-    },
-    {
-        pseudo: "Marie Antoinette",
-        date: "5 hours ago",
-        tags: ["#Brioche", "#Boulangerie"],
-        title: "The ultimate trick for a perfect puff pastry (pâte feuilletée)",
-        text: "Dignissimos facilis iure libero quibusdam unde ut. Autem ex facilis hic id, natus nihil porro praesentium.",
-        upVotes: 42,
-        downVotes: 2
-    }
-];
-
-fetch('http://localhost:6767/topics')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Erreur serveur Go : ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Topics reçus de Go :", data);
-        renderCards(data);
-    })
-    .catch(error => {
-        console.error("Impossible de joindre le serveur Go :", error);
-        document.getElementById('cards-container').innerHTML = `<p class="error">Impossible de charger les sujets.</p>`;
-    });
-
+// Génération des cartes HTML
 function renderCards(discussions) {
     const container = document.getElementById('cards-container');
+    if (!container) return;
     container.innerHTML = "";
 
     if (!discussions || discussions.length === 0) {
@@ -80,13 +82,18 @@ function renderCards(discussions) {
         const tagsArray = item.tags || [];
         const tagsHTML = tagsArray.map(tag => `<p class="tag">${tag}</p>`).join('');
 
-        const dateFormatee = new Date(item.date).toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+        // Sécurité si la date est invalide ou absente
+        let dateFormatee = "Date inconnue";
+        if (item.date) {
+            dateFormatee = new Date(item.date).toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
 
+        // CORRECTION DU BOUTON JOIN DISCUSSION (Remplacé par un <a> avec classe unique)
         const cardHTML = `
             <div class="card">
                 <div class="header-card">
@@ -100,11 +107,11 @@ function renderCards(discussions) {
                 </div>
 
                 <div class="topic-title">
-                    <p>${item.title}</p>
+                    <p>${item.title || 'Sans titre'}</p>
                 </div>
 
                 <div class="topic-text">
-                    <p>${item.text}</p> 
+                    <p>${item.text || item.body || ''}</p> 
                 </div>
 
                 <div class="line"></div>
@@ -114,17 +121,18 @@ function renderCards(discussions) {
                         <div class="up-vote">
                             <img src="assets/icons/upvote.svg" alt="Upvote Icon" class="icon-recipes">
                         </div>
-                        <p>${item.upVotes}</p>
+                        <p>${item.upVotes || 0}</p>
                         <div class="width-spacer"></div>
                         <div class="down-vote">
                             <img src="assets/icons/downvote.svg" alt="Downvote Icon" class="icon-recipes">
                         </div>
-                        <p>${item.downVotes}</p>
+                        <p>${item.downVotes || 0}</p>
                     </div>
-                    <div class="down-vote">
+                    
+                    <a href="/topic_comments" class="down-vote" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
                         <p>Join Discussion</p>
                         <img src="assets/icons/arrowleft.svg" alt="Arrow Icon" class="icon-recipes">
-                    </div>
+                    </a>
                 </div>
             </div>
         `;
@@ -132,3 +140,8 @@ function renderCards(discussions) {
         container.innerHTML += cardHTML;
     });
 }
+
+// Lancement au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+    fetchTopics();
+});

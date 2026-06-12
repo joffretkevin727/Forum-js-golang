@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const user = JSON.parse(localStorage.getItem('user'));
 
@@ -26,4 +26,4 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '/login';
         });
     }
-});
+});*/
