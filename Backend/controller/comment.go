@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"forum/model"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -19,6 +20,37 @@ func (c *CommentController) HandleCommentsGET(w http.ResponseWriter, r *http.Req
 		http.Error(w, "Erreur lors de la récupération", http.StatusInternalServerError)
 		return
 	}
+	json.NewEncoder(w).Encode(list)
+}
+
+// HandleCommentsGET renvoie les commentaires associés à un topic spécifique.
+func (c *CommentController) HandleCommentsByIdGET(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	// 1. Récupérer le paramètre "topic_id" depuis l'URL (?topic_id=X)
+	topicIDStr := r.URL.Query().Get("topic_id")
+	if topicIDStr == "" {
+		http.Error(w, "Le paramètre topic_id est requis", http.StatusBadRequest)
+		return
+	}
+
+	// 2. Convertir l'ID en entier
+	topicID, err := strconv.Atoi(topicIDStr)
+	if err != nil {
+		http.Error(w, "ID de topic invalide", http.StatusBadRequest)
+		return
+	}
+
+	// 3. Appeler ta nouvelle méthode de modèle
+	list, err := c.Model.GetAllById(topicID)
+	if err != nil {
+		// Log de l'erreur dans ton terminal pour débugger au besoin
+		log.Println("Erreur lors de GetAllById :", err)
+		http.Error(w, "Erreur lors de la récupération", http.StatusInternalServerError)
+		return
+	}
+
+	// 4. Renvoyer la liste (qui contient maintenant le pseudo !)
 	json.NewEncoder(w).Encode(list)
 }
 

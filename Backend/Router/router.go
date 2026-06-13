@@ -39,6 +39,7 @@ func New(db *sql.DB) *http.ServeMux {
 	routeur.HandleFunc("POST /comments", commentController.HandleCommentsPOST)
 	routeur.HandleFunc("DELETE /comments", commentController.HandleCommentsDELETE)
 	routeur.HandleFunc("POST /comments/like", likeController.VoteCommentHandler)
+	routeur.HandleFunc("GET /topiccomments", commentController.HandleCommentsByIdGET)
 
 	routeur.HandleFunc("GET /tags", tagController.GetAllTagsHandler)
 	routeur.HandleFunc("POST /tags", tagController.CreateTagHandler)

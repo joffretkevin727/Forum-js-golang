@@ -40,6 +40,7 @@ type Comment struct {
 	Body      string    `json:"body"`
 	TopicID   int       `json:"topic_id"`
 	AuthorID  int       `json:"author_id"`
+	Pseudo    string    `json:"pseudo"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
