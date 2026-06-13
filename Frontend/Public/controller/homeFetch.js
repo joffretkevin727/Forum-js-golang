@@ -82,7 +82,6 @@ function renderCards(discussions) {
         const tagsArray = item.tags || [];
         const tagsHTML = tagsArray.map(tag => `<p class="tag">${tag}</p>`).join('');
 
-        // Sécurité si la date est invalide ou absente
         let dateFormatee = "Date inconnue";
         if (item.date) {
             dateFormatee = new Date(item.date).toLocaleDateString('fr-FR', {
@@ -93,7 +92,9 @@ function renderCards(discussions) {
             });
         }
 
-        // CORRECTION DU BOUTON JOIN DISCUSSION (Remplacé par un <a> avec classe unique)
+        // L'identifiant unique du topic venant de Go
+        const topicId = item.id;
+
         const cardHTML = `
             <div class="card">
                 <div class="header-card">
@@ -129,7 +130,7 @@ function renderCards(discussions) {
                         <p>${item.downVotes || 0}</p>
                     </div>
                     
-                    <a href="/topic_comments" class="down-vote" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                    <a href="/topic_comments?topic_id=${topicId}" class="down-vote" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
                         <p>Join Discussion</p>
                         <img src="assets/icons/arrowleft.svg" alt="Arrow Icon" class="icon-recipes">
                     </a>

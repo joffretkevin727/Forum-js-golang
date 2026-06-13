@@ -75,7 +75,6 @@
     </footer>
   </article>
 
-  <!-- Discussion Section -->
   <section class="discussion-section">
     <header class="section-header">
       <h2>Community Discussion</h2>
@@ -85,40 +84,8 @@
       </div>
     </header>
 
-    <!-- Comment 1 -->
-    <div class="comment-item">
-      <img src="Assets/images/user.svg" alt="User" class="comment-avatar">
-      <div class="comment-content">
-        <div class="comment-meta">
-          <span class="comment-author">Marie-Claire</span>
-          <span class="comment-time">45m ago</span>
-        </div>
-        <p class="comment-text">
-          I tried the lower temp approach yesterday! One thing to note for others: if you use a fan-forced oven, you might need to drop it even lower to 135°C. The "crunch" was significantly better than my usual high-heat flash bake.
-        </p>
-        <div class="comment-footer">
-          <span>Reply</span>
-          <span>Upvote (12)</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Comment 2 -->
-    <div class="comment-item">
-      <img src="Assets/images/user.svg" alt="User" class="comment-avatar">
-      <div class="comment-content">
-        <div class="comment-meta">
-          <span class="comment-author">Pierre-Hubert</span>
-          <span class="comment-time">12m ago</span>
-        </div>
-        <p class="comment-text">
-          Fascinating read, Jean-Sébastien. I'm wondering about the flour type—does a higher T-grade flour absorb the butter differently in this slow-convection method? I've been using T80 for my granolas lately.
-        </p>
-        <div class="comment-footer">
-          <span>Reply</span>
-          <span>Upvote (3)</span>
-        </div>
-      </div>
+    <div id="comments-container">
+      <p class="loading">Chargement des commentaires...</p>
     </div>
   </section>
 
@@ -148,6 +115,6 @@
     </div>
   </section>
 </main>
-
+<script src="controller/CommentsFetch.js"></script>
 </body>
 </html>
